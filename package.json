@@ -4,7 +4,7 @@
   "description": "A low-context OpenCode dispatcher workflow with orchestrator agents, task artifacts, and reusable templates.",
   "type": "module",
   "bin": {
-    "opencode-dispatcher": "./bin/install.js"
+    "opencode-dispatcher": "bin/install.js"
   },
   "scripts": {
     "install:local": "node ./bin/install.js install",
@@ -21,5 +21,13 @@
     "workflow",
     "task-artifacts"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louisemalvin/opencode-dispatcher.git"
+  },
+  "homepage": "https://github.com/louisemalvin/opencode-dispatcher#readme",
+  "bugs": {
+    "url": "https://github.com/louisemalvin/opencode-dispatcher/issues"
+  }
 }

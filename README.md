@@ -4,7 +4,7 @@
 
 - [Table of Contents](#table-of-contents)
 - [What It Does](#what-it-does)
-- [Install from a local clone](#install-from-a-local-clone)
+- [Install](#install)
 - [First use in a project](#first-use-in-a-project)
 - [What gets installed](#what-gets-installed)
 - [Install safety](#install-safety)
@@ -66,7 +66,17 @@ Compared to plain OpenCode:
 | Audit trail | Chat log | Git-tracked artifacts |
 | Best for | Quick edits, one-off questions | Substantial features, multi-step work |
 
-## Install from a local clone
+## Install
+
+Install from the npm registry:
+
+```bash
+npx opencode-dispatcher install
+```
+
+After installing, restart OpenCode so it reloads `~/.config/opencode`.
+
+### Install from source
 
 ```bash
 npm run check
@@ -85,8 +95,6 @@ The default installer command is `install`, so this is also valid:
 ```bash
 node ./bin/install.js
 ```
-
-After installing, restart OpenCode so it reloads `~/.config/opencode`.
 
 ## First use in a project
 
@@ -109,7 +117,7 @@ The installer copies these managed payloads into `~/.config/opencode`:
 
 Current package payloads include:
 
-- agents for orchestration, planning, implementation, documentation, validation, research, review, shipper, shipping, and compatibility build work
+- agents for orchestration, planning, implementation, documentation, validation, research, and shipping
 - `skills/task-artifact-workflow/SKILL.md`
 - `templates/task-artifact-workflow/` report and task-spec templates
 
@@ -168,9 +176,7 @@ Invalid commands print usage and exit with a non-zero status.
 
 ## Publication status
 
-This repository is npm-package shaped (`name: opencode-dispatcher`, `version: 0.1.0`, `license: MIT`, packaged files: `bin/`, `workflow/`, `README.md`), but this README does not assume the package has been published to a registry.
-
-Use the local clone commands above today. If the package is published in the registry you use, the equivalent package command would be:
+This package is published on the npm registry as [`opencode-dispatcher`](https://www.npmjs.com/package/opencode-dispatcher). Install from any project:
 
 ```bash
 npx opencode-dispatcher install
