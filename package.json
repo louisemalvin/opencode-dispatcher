@@ -1,0 +1,25 @@
+{
+  "name": "opencode-dispatcher",
+  "version": "0.1.0",
+  "description": "A low-context OpenCode dispatcher workflow with orchestrator agents, task artifacts, and reusable templates.",
+  "type": "module",
+  "bin": {
+    "opencode-dispatcher": "./bin/install.js"
+  },
+  "scripts": {
+    "install:local": "node ./bin/install.js install",
+    "check": "node ./bin/install.js check"
+  },
+  "files": [
+    "bin/",
+    "workflow/",
+    "README.md"
+  ],
+  "keywords": [
+    "opencode",
+    "ai-agents",
+    "workflow",
+    "task-artifacts"
+  ],
+  "license": "MIT"
+}
