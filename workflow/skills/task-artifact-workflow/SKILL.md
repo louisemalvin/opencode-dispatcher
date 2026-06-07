@@ -41,7 +41,7 @@ Suggested initial file contents should be concise headings, not project facts in
 4. Implementer changes implementation files and writes `implementation-report.md`.
 5. Documentation updates docs/context/decision artifacts and writes `documentation-report.md` when delegated.
 6. Validator checks results against the task spec and writes `validation-report.md`.
-7. Release or shipper commits/pushes only when explicitly requested.
+7. Shipper commits/pushes only when explicitly requested.
 
 ## Rules
 

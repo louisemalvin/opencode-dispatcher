@@ -1,16 +1,70 @@
 # OpenCode Dispatcher
 
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [What It Does](#what-it-does)
+- [Install from a local clone](#install-from-a-local-clone)
+- [First use in a project](#first-use-in-a-project)
+- [What gets installed](#what-gets-installed)
+- [Install safety](#install-safety)
+- [Restore or uninstall](#restore-or-uninstall)
+- [Package commands](#package-commands)
+- [Publication status](#publication-status)
+- [Limitations](#limitations)
+
 OpenCode Dispatcher is a workflow pack for OpenCode. It installs specialist agents, the `task-artifact-workflow` skill, and task-report templates so substantial coding work can run from explicit task specs instead of long chat history.
 
 It is useful when you want agent work to be easier to inspect, resume, and validate:
 
 - task scope in `.ai/tasks/<task-id>/task-spec.md`
 - durable project facts in `.ai/context.md`
-- role boundaries between planning, implementation, documentation, validation, research, and release work
+- role boundaries between planning, implementation, documentation, validation, research, and shipping work
 - short handoffs in chat, with details kept in task artifacts
 - validation reports checked against the approved scope
 
 For tiny one-off edits, plain OpenCode is often enough.
+
+## What It Does
+
+OpenCode Dispatcher replaces OpenCode's default single-agent approach with a team of specialist agents coordinated through file-based artifacts. Each agent has a defined role and boundary. The orchestrator routes work, delegates to the right agent, and synthesizes results back to you.
+
+All task state lives in `.ai/tasks/<task-id>/` artifacts — task specs, implementation reports, validation reports, documentation reports — rather than in chat history.
+
+| Agent | Role | When |
+|---|---|---|
+| Orchestrator | User-facing coordinator; routes work, synthesizes results | Always active |
+| Task Planner | Creates auditable `.ai/tasks/<id>/task-spec.md` | Used before implementation |
+| Implementer | Edits source code per approved task spec | Used after spec is approved |
+| Validator | Checks results against task spec and writes `validation-report.md` | Used after implementation |
+| Documentation | Updates docs, context, decision artifacts | Used when docs are needed |
+| Research | Gathers external facts, comparisons, best practices | Used when facts are needed |
+| Release / Shipper | Git commit and push only | Used when explicitly requested |
+
+```mermaid
+graph TD
+    U[User] -->|request| O[Orchestrator]
+    O -->|needs facts| R[Research]
+    O -->|scope clear| TP[Task Planner]
+    TP -->|task-spec.md| O
+    O -->|approved| I[Implementer]
+    I -->|implementation-report.md| V[Validator]
+    V -->|validation-report.md| O
+    O -->|needs docs| D[Documentation]
+    O -->|commit/push| RL[Release / Shipper]
+    O -->|result| U
+```
+
+Compared to plain OpenCode:
+
+| Dimension | Plain OpenCode | OpenCode Dispatcher |
+|---|---|---|
+| Task scope | Chat history | File-based `.ai/tasks/<id>/task-spec.md` |
+| Agent model | Single agent | Specialist agents with role boundaries |
+| Validation | Implicit (trust the output) | Explicit (validator checks against spec) |
+| Resumability | Scroll chat history | Read task spec + validation report |
+| Audit trail | Chat log | Git-tracked artifacts |
+| Best for | Quick edits, one-off questions | Substantial features, multi-step work |
 
 ## Install from a local clone
 
@@ -55,7 +109,7 @@ The installer copies these managed payloads into `~/.config/opencode`:
 
 Current package payloads include:
 
-- agents for orchestration, planning, implementation, documentation, validation, research, review, release, shipping, and compatibility build work
+- agents for orchestration, planning, implementation, documentation, validation, research, review, shipper, shipping, and compatibility build work
 - `skills/task-artifact-workflow/SKILL.md`
 - `templates/task-artifact-workflow/` report and task-spec templates
 

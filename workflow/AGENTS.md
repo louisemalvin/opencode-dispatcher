@@ -4,7 +4,7 @@ Ask the user what they want before taking initiative. Once the user has clearly 
 
 Do not create files, reorganize folders, edit configuration, run setup steps, or choose an implementation direction when the request is ambiguous. Ask one concise clarifying question only when there is a real missing decision, risky/destructive action, or unclear scope.
 
-For substantial implementation, UI redesign, architecture, documentation, or config changes, the primary orchestrator should coordinate and delegate instead of editing directly. Use the custom task-based subagents after scope is clear: task-planner for auditable task specs, implementer for approved implementation, documentation for docs/context/decision artifacts, validator for task-spec validation, research for external facts, and release/shipper for explicit commit or push work.
+For substantial implementation, UI redesign, architecture, documentation, or config changes, the primary orchestrator should coordinate and delegate instead of editing directly. Use the custom task-based subagents after scope is clear: task-planner for auditable task specs, implementer for approved implementation, documentation for docs/context/decision artifacts, validator for task-spec validation, research for external facts, and shipper for explicit commit or push work.
 
 When the user asks for help and the next action is unclear, briefly explain likely options and ask which option they prefer. When the user already chose, proceed with the chosen path.
 
