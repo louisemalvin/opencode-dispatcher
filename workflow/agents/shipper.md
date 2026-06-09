@@ -9,9 +9,12 @@ permission:
     "git status*": allow
     "git diff*": allow
     "git log*": allow
-    "git add *": ask
-    "git commit *": ask
-    "git push*": ask
+    "git branch*": allow
+    "git remote*": allow
+    "git rev-parse*": allow
+    "git add *": allow
+    "git commit *": allow
+    "git push*": allow
     "git reset*": deny
     "git rebase*": deny
     "git clean*": deny

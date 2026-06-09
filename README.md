@@ -13,13 +13,13 @@
 - [Publication status](#publication-status)
 - [Limitations](#limitations)
 
-OpenCode Dispatcher is a workflow pack for OpenCode. It installs specialist agents, the `task-artifact-workflow` skill, and project-local task-report templates so substantial coding work can run from explicit task specs instead of long chat history.
+OpenCode Dispatcher is a workflow pack for OpenCode. It installs specialist agents so substantial coding work can run from explicit task specs instead of long chat history.
 
 It is useful when you want agent work to be easier to inspect, resume, and validate:
 
 - task scope in `.ai/tasks/<task-id>/task-spec.md`
 - durable project facts in `.ai/context.md`
-- role boundaries between planning, implementation, documentation, validation, research, and shipping work
+- role boundaries between planning, test writing, implementation, documentation, validation, research, and shipping work
 - short handoffs in chat, with details kept in task artifacts
 - validation reports checked against the approved scope
 
@@ -35,6 +35,7 @@ All task state lives in `.ai/tasks/<task-id>/` artifacts — task specs, impleme
 |---|---|---|
 | Orchestrator | User-facing coordinator; routes work, synthesizes results | Always active |
 | Task Planner | Creates auditable `.ai/tasks/<id>/task-spec.md` | Used before implementation |
+| Test Writer | Writes tests from testable acceptance criteria | Used before implementation (test-driven) |
 | Implementer | Edits source code per approved task spec | Used after spec is approved |
 | Validator | Checks results against task spec and writes `validation-report.md` | Used after implementation |
 | Documentation | Updates docs, context, decision artifacts | Used when docs are needed |
@@ -47,6 +48,8 @@ graph TD
     O -->|needs facts| R[Research]
     O -->|scope clear| TP[Task Planner]
     TP -->|task-spec.md| O
+    O -->|has testable criteria| TW[Test Writer]
+    TW -->|tests| O
     O -->|approved| I[Implementer]
     I -->|implementation-report.md| V[Validator]
     V -->|validation-report.md| O
@@ -98,9 +101,9 @@ node ./bin/install.js
 
 ## First use in a project
 
-1. From the project root, run the install command so templates are copied into `.ai/templates/`.
+1. Run the install command.
 2. Restart OpenCode so it reloads `~/.config/opencode`, then open the project.
-3. If the project does not already have `.ai/` artifacts, ask the orchestrator to run `/ai-init`.
+3. If the project does not already have `.ai/context.md`, the orchestrator initializes `.ai/` before substantial work.
 4. For substantial work, ask for a task spec first. Example: `Create a task spec for improving the settings page, then wait for approval.`
 5. After approving the task spec, ask the orchestrator to implement and validate it. Example: `Implement the approved task spec at .ai/tasks/settings-page/task-spec.md and run validation.`
 
@@ -108,39 +111,26 @@ The workflow treats live chat as coordination. Durable details belong in `.ai/co
 
 ## What gets installed
 
-The installer copies these managed payloads into `~/.config/opencode`:
+The installer copies this managed payload into `~/.config/opencode`:
 
 ```text
 ~/.config/opencode/agents/
-~/.config/opencode/skills/
 ```
-
-It also copies project-local templates into the current workspace:
-
-```text
-.ai/templates/
-```
-
-Templates are project-local by design. Agents read them from the workspace instead of `~/.config/opencode/templates/` to avoid permission prompts caused by global-template reads.
 
 Current package payloads include:
 
 - agents for orchestration, planning, test writing, implementation, documentation, validation, research, and shipping
-- `skills/task-artifact-workflow/SKILL.md`
-- `.ai/templates/` report and task-spec templates in the current project
 
-The installer does not install or manage provider config, model settings, secrets, dependencies, git config, `opencode.jsonc`, `node_modules`, or global `~/.config/opencode/templates/`.
+The installer does not install or manage provider config, model settings, secrets, dependencies, git config, `opencode.jsonc`, `node_modules`, global skills, or templates.
 
 ## Install safety
 
-Before copying a managed path or template file, the installer backs up any existing path beside it with a timestamped `.bak-*` suffix, then copies the Dispatcher payload into that path. It does not remove existing directories first, so same-named files may be overwritten and unrelated pre-existing files may remain.
+Before copying a managed path, the installer backs up any existing path beside it with a timestamped `.bak-*` suffix, then copies the Dispatcher payload into that path. It does not remove existing directories first, so same-named files may be overwritten and unrelated pre-existing files may remain.
 
 Example backup names:
 
 ```text
 ~/.config/opencode/agents.bak-2026-06-07T12-34-56-789Z
-~/.config/opencode/skills.bak-2026-06-07T12-34-56-789Z
-.ai/templates/task-spec.md.bak-2026-06-07T12-34-56-789Z
 ```
 
 Your global `~/.config/opencode/AGENTS.md` is user-owned. OpenCode Dispatcher does not install, overwrite, back up, restore, remove, or rename it.
@@ -161,9 +151,7 @@ mv ~/.config/opencode/agents ~/.config/opencode/agents.dispatcher
 mv ~/.config/opencode/agents.bak-<timestamp> ~/.config/opencode/agents
 ```
 
-Use the same pattern for `skills`. For project templates, move the matching `.bak-*` file beside `.ai/templates/<name>.md` back into place.
-
-To uninstall Dispatcher, restore your backups if you had pre-existing global agents, skills, or project templates. Only remove managed paths outright if you do not need any current contents, including files that may have existed before install.
+To uninstall Dispatcher, restore your backups if you had pre-existing global agents. Only remove managed paths outright if you do not need any current contents, including files that may have existed before install.
 
 ## Package commands
 
@@ -192,8 +180,7 @@ npx opencode-dispatcher install
 
 ## Limitations
 
-- Managed global `agents` and `skills` paths are backed up, then overlaid with Dispatcher files; unrelated pre-existing files may remain.
-- Project template files under `.ai/templates/` are backed up individually before overwrite.
+- Managed global `agents` paths are backed up, then overlaid with Dispatcher files; unrelated pre-existing files may remain.
 - Restart OpenCode after install, restore, or uninstall so global config is reloaded.
 - Providers, models, secrets, project dependencies, and git remotes are not configured by this package.
 - The workflow is designed for substantial tasks with scope, artifacts, and validation; it may be unnecessary overhead for tiny edits.

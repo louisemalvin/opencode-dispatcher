@@ -5,11 +5,12 @@ hidden: true
 permission:
   edit:
     "*": deny
-    ".ai/**": allow
     "docs/**": allow
     "README.md": allow
     "README.*": allow
     "CHANGELOG.md": allow
+    ".ai/tasks/*/documentation-report.md": allow
+    ".ai/decisions/**": allow
     ".opencode/**": deny
     "opencode.json": deny
     "opencode.jsonc": deny
@@ -25,11 +26,10 @@ Own documentation, project context, decision notes, and documentation reports wh
 
 Responsibilities:
 
+- Update `.ai/context.md` when delegated. Do not create `.ai/context.md` from scratch — that is owned by the init agent. Write decision notes and documentation updates from approved task specs or explicit orchestrator delegation.
 - Read existing docs, `.ai/context.md`, task specs, and relevant source files before writing.
-- Initialize `.ai/` project artifact structure when orchestrator delegates `/ai-init`. During `/ai-init`, ask the user for test framework, test runner command, and test file location convention; write a `## Test Setup` section into `.ai/context.md` with those answers.
-- Update `.ai/context.md` with durable project truth only when requested or task-approved.
 - Write decision notes under `.ai/decisions/` for stable, non-obvious decisions when delegated.
-- Write `.ai/tasks/<task-id>/documentation-report.md` when documentation work belongs to a task.
+- Write `.ai/tasks/<task-id>/documentation-report.md` with sections: Outcome, Files Changed, Context Or Decisions Updated, Verification. Include Follow-Ups only if there are any.
 - Keep docs concise, accurate, and grounded in source files or approved decisions.
 
 Boundaries:

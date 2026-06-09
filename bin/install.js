@@ -8,15 +8,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, "..")
 const workflowDir = path.join(root, "workflow")
 const targetDir = path.join(process.env.HOME || "", ".config", "opencode")
-const projectTemplatesDir = path.join(process.cwd(), ".ai", "templates")
 const command = process.argv[2] || "install"
-const installPayloads = ["agents", "skills"]
-const templatePayloads = [
-  "task-spec.md",
-  "implementation-report.md",
-  "documentation-report.md",
-  "validation-report.md"
-]
+const installPayloads = ["agents"]
 
 function exists(filePath) {
   return fs.existsSync(filePath)
@@ -50,6 +43,49 @@ function backupIfExists(filePath) {
   return target
 }
 
+function markdownFiles(dir) {
+  if (!exists(dir)) return []
+  return fs.readdirSync(dir).filter((entry) => entry.endsWith(".md")).sort()
+}
+
+function containsFiles(dir) {
+  if (!exists(dir)) return false
+
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isFile()) return true
+    if (entry.isDirectory() && containsFiles(path.join(dir, entry.name))) return true
+  }
+
+  return false
+}
+
+function extractFrontmatter(filePath) {
+  const content = fs.readFileSync(filePath, "utf8")
+  if (!content.startsWith("---\n")) return null
+
+  const end = content.indexOf("\n---", 4)
+  if (end === -1) return null
+
+  return content.slice(4, end).trimEnd()
+}
+
+function orchestratorTaskPermissions(frontmatter) {
+  const names = []
+  const lines = frontmatter.split("\n")
+  const taskIndex = lines.findIndex((line) => /^  task:\s*$/.test(line))
+
+  if (taskIndex === -1) return names
+
+  for (const line of lines.slice(taskIndex + 1)) {
+    if (/^  \S/.test(line)) break
+
+    const match = line.match(/^    ([A-Za-z0-9_-]+):\s*allow\s*$/)
+    if (match) names.push(match[1])
+  }
+
+  return names.sort()
+}
+
 function install() {
   if (!process.env.HOME) {
     throw new Error("HOME is not set; cannot locate ~/.config/opencode")
@@ -74,19 +110,7 @@ function install() {
     copyRecursive(source, target)
   }
 
-  for (const item of templatePayloads) {
-    const source = path.join(workflowDir, "templates", item)
-    const target = path.join(projectTemplatesDir, item)
-
-    if (!exists(source)) continue
-
-    const backup = backupIfExists(target)
-    if (backup) backups.push([target, backup])
-    copyRecursive(source, target)
-  }
-
-  console.log(`Installed OpenCode Dispatcher agents and skills to ${targetDir}`)
-  console.log(`Installed project templates to ${projectTemplatesDir}`)
+  console.log(`Installed OpenCode Dispatcher agents to ${targetDir}`)
   if (backups.length > 0) {
     console.log("Backups created:")
     for (const [target, backup] of backups) {
@@ -96,38 +120,67 @@ function install() {
   }
   console.log("Next steps:")
   console.log("1. Restart OpenCode so it reloads ~/.config/opencode.")
-  console.log("2. Open this project so agents can read .ai/templates without global-template permission prompts.")
-  console.log("3. Ask the orchestrator to run /ai-init if the project has no .ai/context.md yet.")
-  console.log("4. For substantial work, ask OpenCode Dispatcher to create a task spec, implement it, and validate it.")
+  console.log("2. Open a project; the orchestrator initializes .ai/ automatically when needed.")
+  console.log("3. For substantial work, ask OpenCode Dispatcher to create a task spec, implement it, and validate it.")
 }
 
 function check() {
-  const requiredInstallPayloads = [
-    "workflow/agents/orchestrator.md",
-    "workflow/agents/task-planner.md",
-    "workflow/agents/implementer.md",
-    "workflow/agents/documentation.md",
-    "workflow/agents/research.md",
-    "workflow/agents/shipper.md",
-    "workflow/agents/test-writer.md",
-    "workflow/agents/validator.md",
-    "workflow/skills/task-artifact-workflow/SKILL.md",
-    "workflow/templates/task-spec.md",
-    "workflow/templates/implementation-report.md",
-    "workflow/templates/documentation-report.md",
-    "workflow/templates/validation-report.md"
-  ]
-  const required = requiredInstallPayloads
+  const agentsDir = path.join(workflowDir, "agents")
+  const skillsDir = path.join(workflowDir, "skills")
+  const templatesDir = path.join(workflowDir, "templates")
+  const agentFiles = markdownFiles(agentsDir)
+  const errors = []
 
-  const missing = required.filter((item) => !exists(path.join(root, item)))
-  if (missing.length > 0) {
-    console.error("Missing required files:")
-    for (const item of missing) console.error(`- ${item}`)
+  if (agentFiles.length === 0) {
+    errors.push("No agent files found in workflow/agents")
+  }
+
+  if (containsFiles(skillsDir)) {
+    errors.push("workflow/skills must be empty or absent; workflow behavior now lives in agents")
+  }
+
+  if (containsFiles(templatesDir)) {
+    errors.push("workflow/templates must be empty or absent; report structures now live in agent prompts")
+  }
+
+  for (const file of agentFiles) {
+    const agentPath = path.join(agentsDir, file)
+    const frontmatter = extractFrontmatter(agentPath)
+    if (!frontmatter) {
+      errors.push(`workflow/agents/${file} is missing YAML frontmatter`)
+      continue
+    }
+
+    if (!/^description:\s+.+$/m.test(frontmatter)) errors.push(`workflow/agents/${file} is missing frontmatter description`)
+    if (!/^mode:\s+(primary|subagent|all)\s*$/m.test(frontmatter)) errors.push(`workflow/agents/${file} is missing valid frontmatter mode`)
+  }
+
+  const orchestratorPath = path.join(agentsDir, "orchestrator.md")
+  const orchestratorFrontmatter = exists(orchestratorPath) ? extractFrontmatter(orchestratorPath) : null
+
+  if (!orchestratorFrontmatter) {
+    errors.push("workflow/agents/orchestrator.md is missing YAML frontmatter")
+  } else {
+    const permittedAgents = orchestratorTaskPermissions(orchestratorFrontmatter)
+    const fileAgents = agentFiles.map((file) => file.replace(/\.md$/, "")).filter((name) => name !== "orchestrator").sort()
+
+    for (const name of permittedAgents) {
+      if (!fileAgents.includes(name)) errors.push(`orchestrator permits missing agent: workflow/agents/${name}.md`)
+    }
+
+    for (const name of fileAgents) {
+      if (!permittedAgents.includes(name)) errors.push(`agent file is not permitted by orchestrator: workflow/agents/${name}.md`)
+    }
+  }
+
+  if (errors.length > 0) {
+    console.error("Workflow package check failed:")
+    for (const error of errors) console.error(`- ${error}`)
     process.exitCode = 1
     return
   }
 
-  console.log("Workflow package check passed. Required files: agents, skills, templates.")
+  console.log(`Workflow package check passed. Agents: ${agentFiles.map((file) => file.replace(/\.md$/, "")).join(", ")}.`)
 }
 
 if (command === "install") {
@@ -136,7 +189,7 @@ if (command === "install") {
   check()
 } else {
   console.error("Usage: opencode-dispatcher [install|check]")
-  console.error("  install  Copy agents and skills into ~/.config/opencode, and templates into .ai/templates")
-  console.error("  check    Verify required workflow files are present in this package")
+  console.error("  install  Copy agents into ~/.config/opencode")
+  console.error("  check    Verify workflow agent files and orchestrator references")
   process.exitCode = 1
 }
