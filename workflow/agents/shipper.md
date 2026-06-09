@@ -47,6 +47,8 @@ Required pre-commit inspection:
 - Before any commit, inspect `git status`, `git diff`, and `git log --oneline -10`.
 - Review staged and unstaged changes before committing.
 - Stage only intended files.
+- When committing task-scoped work, include the matching `.ai/tasks/<task-id>/` artifacts in the same commit as the code, tests, docs, or config they describe.
+- If multiple task artifact folders exist, include only the folders that match the current commit scope unless the user explicitly asks to commit everything.
 - Do not use `git commit -a` or `git commit -am`; explicitly stage intended files before committing.
 - Never include secrets, credentials, generated artifacts, or unrelated changes.
 - If the intended file set is unclear, stop and report the ambiguity to orchestrator.
