@@ -17,7 +17,7 @@ OpenCode Dispatcher is a workflow pack for OpenCode. It installs specialist agen
 
 It is useful when you want agent work to be easier to inspect, resume, and validate:
 
-- task scope in `.ai/tasks/<task-id>/task-spec.md`
+- task scope in `.ai/tasks/<NNN>-<task-id>/task-spec.md`
 - durable project facts in `.ai/context.md`
 - role boundaries between planning, test writing, implementation, documentation, validation, research, and shipping work
 - short handoffs in chat, with details kept in task artifacts
@@ -29,24 +29,27 @@ For tiny one-off edits, plain OpenCode is often enough.
 
 OpenCode Dispatcher replaces OpenCode's default single-agent approach with a team of specialist agents coordinated through file-based artifacts. Each agent has a defined role and boundary. The orchestrator routes work, delegates to the right agent, and synthesizes results back to you.
 
-All task state lives in `.ai/tasks/<task-id>/` artifacts — task specs, implementation reports, validation reports, documentation reports — rather than in chat history.
+All task state lives in `.ai/tasks/<NNN>-<task-id>/` artifacts — task specs, implementation reports, validation reports, documentation reports — rather than in chat history.
 
 | Agent | Role | When |
 |---|---|---|
-| Orchestrator | User-facing coordinator; routes work, synthesizes results | Always active |
-| Task Planner | Creates auditable `.ai/tasks/<id>/task-spec.md` | Used before implementation |
+| Orchestrator | User-facing coordinator; state-machine routing | Always active |
+| Task Planner | Task specs and multi-unit decomposition | Used before implementation |
 | Test Writer | Writes tests from testable acceptance criteria | Used before implementation (test-driven) |
 | Implementer | Edits source code per approved task spec | Used after spec is approved |
 | Validator | Checks results against task spec and writes `validation-report.md` | Used after implementation |
 | Documentation | Updates docs, context, decision artifacts | Used when docs are needed |
 | Research | Gathers external facts, comparisons, best practices | Used when facts are needed |
-| Release / Shipper | Git commit and push only | Used when explicitly requested |
+| Shipper | Git commit and push only | Used when explicitly requested |
+| Executor | Tiny single-file atomic edits | Used for unambiguous one-liners |
+| Init | Bootstraps `.ai/context.md` on first project use | Used once per project |
 
 ```mermaid
 graph TD
     U[User] -->|request| O[Orchestrator]
+    O -->|atomic edit| EX[Executor]
     O -->|needs facts| R[Research]
-    O -->|scope clear| TP[Task Planner]
+    O -->|plan| TP[Task Planner]
     TP -->|task-spec.md| O
     O -->|has testable criteria| TW[Test Writer]
     TW -->|tests| O
@@ -54,7 +57,8 @@ graph TD
     I -->|implementation-report.md| V[Validator]
     V -->|validation-report.md| O
     O -->|needs docs| D[Documentation]
-    O -->|commit/push| RL[Release / Shipper]
+    O -->|commit/push| SH[Shipper]
+    O -->|first use| IN[Init]
     O -->|result| U
 ```
 
@@ -62,7 +66,7 @@ Compared to plain OpenCode:
 
 | Dimension | Plain OpenCode | OpenCode Dispatcher |
 |---|---|---|
-| Task scope | Chat history | File-based `.ai/tasks/<id>/task-spec.md` |
+| Task scope | Chat history | File-based `.ai/tasks/<NNN>-<id>/task-spec.md` |
 | Agent model | Single agent | Specialist agents with role boundaries |
 | Validation | Implicit (trust the output) | Explicit (validator checks against spec) |
 | Resumability | Scroll chat history | Read task spec + validation report |
@@ -105,9 +109,9 @@ node ./bin/install.js
 2. Restart OpenCode so it reloads `~/.config/opencode`, then open the project.
 3. If the project does not already have `.ai/context.md`, the orchestrator initializes `.ai/` before substantial work.
 4. For substantial work, ask for a task spec first. Example: `Create a task spec for improving the settings page, then wait for approval.`
-5. After approving the task spec, ask the orchestrator to implement and validate it. Example: `Implement the approved task spec at .ai/tasks/settings-page/task-spec.md and run validation.`
+5. After approving the task spec, ask the orchestrator to implement and validate it. Example: `Implement the approved task spec at .ai/tasks/001-settings-page/task-spec.md and run validation.`
 
-The workflow treats live chat as coordination. Durable details belong in `.ai/context.md`, `.ai/tasks/<task-id>/task-spec.md`, and task reports such as `implementation-report.md`, `documentation-report.md`, and `validation-report.md`.
+The workflow treats live chat as coordination. Durable details belong in `.ai/context.md`, `.ai/tasks/<NNN>-<task-id>/task-spec.md`, and task reports such as `implementation-report.md`, `documentation-report.md`, and `validation-report.md`.
 
 ## What gets installed
 
