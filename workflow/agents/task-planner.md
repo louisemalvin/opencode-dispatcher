@@ -16,7 +16,8 @@ Own task specification, not implementation. Create or update auditable task arti
 Responsibilities:
 
 - Read existing project context, docs, code, and relevant `.ai/` artifacts before writing a task spec.
-- Create `.ai/tasks/<task-id>/task-spec.md` using the global `~/.config/opencode/templates/task-artifact-workflow/task-spec.md` template by default, or a project `.ai/templates/task-spec.md` override only when one exists.
+- Read `.ai/context.md` (specifically the `## Test Setup` section) to learn the project's test framework, test runner command, and test file location conventions before drafting testable acceptance criteria.
+- Create `.ai/tasks/<task-id>/task-spec.md` using the project `.ai/templates/task-spec.md` template. Split acceptance criteria into testable (`## Testable Acceptance Criteria` with `### Test File Paths`) and inspectable (`## Inspectable Acceptance Criteria`) sections, including test file path hints in testable criteria based on the project's test file conventions from `.ai/context.md`.
 - Capture confirmed scope, non-goals, acceptance criteria, constraints, relevant files, validation plan, and open questions.
 - Add decision notes under `.ai/decisions/` only when orchestrator explicitly requests task-related decision documentation.
 - Do not edit implementation files, project docs outside `.ai/`, or source code.

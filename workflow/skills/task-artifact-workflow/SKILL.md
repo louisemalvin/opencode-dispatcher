@@ -24,12 +24,31 @@ When the user runs `/ai-init`, create only missing files and preserve existing c
 
 ```text
 .ai/context.md
+.ai/templates/task-spec.md
+.ai/templates/implementation-report.md
+.ai/templates/documentation-report.md
+.ai/templates/validation-report.md
 .ai/tasks/README.md
 .ai/decisions/README.md
 .ai/research/README.md
 ```
 
-Use global task artifact templates from `~/.config/opencode/templates/task-artifact-workflow/` when creating task specs or reports. Do not copy templates into project `.ai/templates/` by default. Create project-level templates only when the user explicitly requests project-specific template overrides.
+Use project-local task artifact templates from `.ai/templates/` when creating task specs or reports. Do not use global templates under `~/.config/opencode/templates/`; reading templates from the workspace avoids cross-boundary permission prompts.
+
+During `/ai-init`, also capture test-specific project information by asking the user:
+
+1. What test framework does the project use? (e.g., pytest, jest, vitest, go test)
+2. What is the test runner command? (e.g., `npm test`, `pytest`, `cargo test`)
+3. Where do test files live? (e.g., `tests/`, `__tests__/`, alongside source)
+
+Record the answers in `.ai/context.md` under a `## Test Setup` section:
+
+```markdown
+## Test Setup
+- Framework: <user answer>
+- Runner: `<user answer>`
+- Test file convention: `<user answer>`
+```
 
 Suggested initial file contents should be concise headings, not project facts invented by the agent.
 

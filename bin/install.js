@@ -8,8 +8,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, "..")
 const workflowDir = path.join(root, "workflow")
 const targetDir = path.join(process.env.HOME || "", ".config", "opencode")
+const projectTemplatesDir = path.join(process.cwd(), ".ai", "templates")
 const command = process.argv[2] || "install"
-const installPayloads = ["agents", "skills", "templates"]
+const installPayloads = ["agents", "skills"]
+const templatePayloads = [
+  "task-spec.md",
+  "implementation-report.md",
+  "documentation-report.md",
+  "validation-report.md"
+]
 
 function exists(filePath) {
   return fs.existsSync(filePath)
@@ -67,7 +74,19 @@ function install() {
     copyRecursive(source, target)
   }
 
-  console.log(`Installed OpenCode Dispatcher agents, skills, and templates to ${targetDir}`)
+  for (const item of templatePayloads) {
+    const source = path.join(workflowDir, "templates", item)
+    const target = path.join(projectTemplatesDir, item)
+
+    if (!exists(source)) continue
+
+    const backup = backupIfExists(target)
+    if (backup) backups.push([target, backup])
+    copyRecursive(source, target)
+  }
+
+  console.log(`Installed OpenCode Dispatcher agents and skills to ${targetDir}`)
+  console.log(`Installed project templates to ${projectTemplatesDir}`)
   if (backups.length > 0) {
     console.log("Backups created:")
     for (const [target, backup] of backups) {
@@ -77,8 +96,9 @@ function install() {
   }
   console.log("Next steps:")
   console.log("1. Restart OpenCode so it reloads ~/.config/opencode.")
-  console.log("2. In a project, ask the orchestrator to run /ai-init if the project has no .ai/ folder yet.")
-  console.log("3. For substantial work, ask OpenCode Dispatcher to create a task spec, implement it, and validate it.")
+  console.log("2. Open this project so agents can read .ai/templates without global-template permission prompts.")
+  console.log("3. Ask the orchestrator to run /ai-init if the project has no .ai/context.md yet.")
+  console.log("4. For substantial work, ask OpenCode Dispatcher to create a task spec, implement it, and validate it.")
 }
 
 function check() {
@@ -87,12 +107,17 @@ function check() {
     "workflow/agents/task-planner.md",
     "workflow/agents/implementer.md",
     "workflow/agents/documentation.md",
+    "workflow/agents/research.md",
+    "workflow/agents/shipper.md",
+    "workflow/agents/test-writer.md",
     "workflow/agents/validator.md",
     "workflow/skills/task-artifact-workflow/SKILL.md",
-    "workflow/templates/task-artifact-workflow/task-spec.md"
+    "workflow/templates/task-spec.md",
+    "workflow/templates/implementation-report.md",
+    "workflow/templates/documentation-report.md",
+    "workflow/templates/validation-report.md"
   ]
-  const referenceFiles = ["workflow/AGENTS.md"]
-  const required = [...requiredInstallPayloads, ...referenceFiles]
+  const required = requiredInstallPayloads
 
   const missing = required.filter((item) => !exists(path.join(root, item)))
   if (missing.length > 0) {
@@ -102,7 +127,7 @@ function check() {
     return
   }
 
-  console.log("Workflow package check passed. Install payloads: agents, skills, templates. Reference files checked separately: workflow/AGENTS.md.")
+  console.log("Workflow package check passed. Required files: agents, skills, templates.")
 }
 
 if (command === "install") {
@@ -111,7 +136,7 @@ if (command === "install") {
   check()
 } else {
   console.error("Usage: opencode-dispatcher [install|check]")
-  console.error("  install  Copy agents, skills, and templates into ~/.config/opencode")
+  console.error("  install  Copy agents and skills into ~/.config/opencode, and templates into .ai/templates")
   console.error("  check    Verify required workflow files are present in this package")
   process.exitCode = 1
 }

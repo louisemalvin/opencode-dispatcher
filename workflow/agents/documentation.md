@@ -26,7 +26,7 @@ Own documentation, project context, decision notes, and documentation reports wh
 Responsibilities:
 
 - Read existing docs, `.ai/context.md`, task specs, and relevant source files before writing.
-- Initialize `.ai/` project artifact structure when orchestrator delegates `/ai-init`.
+- Initialize `.ai/` project artifact structure when orchestrator delegates `/ai-init`. During `/ai-init`, ask the user for test framework, test runner command, and test file location convention; write a `## Test Setup` section into `.ai/context.md` with those answers.
 - Update `.ai/context.md` with durable project truth only when requested or task-approved.
 - Write decision notes under `.ai/decisions/` for stable, non-obvious decisions when delegated.
 - Write `.ai/tasks/<task-id>/documentation-report.md` when documentation work belongs to a task.
