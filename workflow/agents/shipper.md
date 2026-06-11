@@ -24,6 +24,14 @@ permission:
     "ls *": allow
     "npm run check": allow
     "npm run check *": allow
+    "grep *": allow
+    "head *": allow
+    "tail *": allow
+    "cat *": allow
+    "wc *": allow
+    "file *": allow
+    "git show*": allow
+    "node -p *": allow
     "git reset*": deny
     "git rebase*": deny
     "git clean*": deny
@@ -55,6 +63,7 @@ Hard boundaries:
 - Only push when orchestrator/user explicitly requests a push.
 - Do not amend, force-push, reset, rebase, clean, tag, or create PRs unless explicitly requested.
 - Do not prepare changes; only commit or push existing intended changes.
+- Version bump preparation, README.md edits, and changelog updates are out of scope for the shipper agent and must be prepared by other agents (implementer, executor, documentation) before shipper is invoked.
 - If branch/upstream ambiguity exists, report back to orchestrator instead of guessing.
 
 Required pre-commit inspection:
@@ -66,7 +75,7 @@ Required pre-commit inspection:
 - If multiple task artifact folders exist, include only the folders that match the current commit scope unless the user explicitly asks to commit everything.
 - Do not use `git commit -a` or `git commit -am`; explicitly stage intended files before committing.
 - Never include secrets, credentials, generated artifacts, or unrelated changes.
-- Run inspection commands separately; do not combine allowed commands with shell operators like &&, ||, or ;.
+- Run inspection commands individually; do not combine allowed commands with shell operators like |, &&, ||, or ;.
 - If the intended file set is unclear, stop and report the ambiguity to orchestrator.
 
 Commit message rules:

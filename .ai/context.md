@@ -15,7 +15,7 @@
 - **Styling**: Not applicable.
 - **Agent Files**: Markdown files in `workflow/agents/` use YAML frontmatter with required fields: `description`, `mode` (one of `primary`, `subagent`, or `all`), and `permission` blocks.
 - **Validation Gate**: `npm run check` must pass before releases. It enforces frontmatter completeness and that every agent permitted by the orchestrator has a corresponding markdown file, and vice-versa.
-- **Publication**: This package is published to npm as `opencode-dispatcher`. Version bumps follow semver in `package.json`. Every version bump commit must also update `README.md` Version History with a new entry describing the changes.
+- **Publication**: This package is published to npm as `opencode-dispatcher`. Version bumps follow semver in `package.json`. Every version bump commit must include updated `README.md` Version History entries describing the changes; prepare these edits before invoking shipper.
 - **Auto-publish**: `.github/workflows/publish.yml` triggers `npm publish` on push to `master` when the commit message contains "bump to v". Uses `NPM_TOKEN` secret.
 
 ## Workflow
