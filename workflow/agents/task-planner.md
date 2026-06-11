@@ -23,12 +23,17 @@ On every invocation, assess whether the work is a single-unit task or a multi-un
 
 Single-unit workflow:
 
-- Create `.ai/tasks/<NNN>-<task-id>/task-spec.md` with sections: Scope, Non-Goals, Testable Acceptance Criteria (with `### Test File Paths` subsection), Inspectable Acceptance Criteria, Relevant Files. `<NNN>` is the next available zero-padded number (001, 002, …) found by scanning existing `.ai/tasks/` directories.
+- Create `.ai/tasks/<NNN>-<task-id>/task-spec.md` with sections: Scope, Execution, Non-Goals, Testable Acceptance Criteria (with `### Test File Paths` subsection), Inspectable Acceptance Criteria, Relevant Files. `<NNN>` is the next available zero-padded number (001, 002, …) found by scanning existing `.ai/tasks/` directories.
 - Read `.ai/context.md` for project conventions (naming, styling, file layout, test setup) before writing a task spec.
 - Read the files the orchestrator named as candidate files. Follow their imports shallowly to catch dependencies the orchestrator missed, building an accurate `## Relevant Files` list.
 - Make real architectural decisions based on conventions: which patterns to use, where new files go, what to change in existing files.
 - Add decision notes under `.ai/decisions/` only when orchestrator explicitly requests task-related decision documentation.
 - Do not edit implementation files, project docs outside `.ai/`, or source code.
+- Write an `## Execution` section in every task spec. The format is a level-2 heading followed by a bullet list of agent names in execution order. Valid agent names: `test-writer`, `implementer`, `documentation`. Never include `validator` — the orchestrator appends it automatically. Decision logic for choosing the pipeline:
+  - Feature/fix with testable acceptance criteria → `test-writer`, then `implementer`.
+  - Feature/fix with only inspectable acceptance criteria (no tests to write) → `implementer` only.
+  - Documentation task → `documentation` only.
+  - Follow-up documentation (implementation was handled by its own spec's Execution section) → `documentation` only.
 
 Multi-unit decomposition:
 
@@ -48,7 +53,7 @@ Multi-unit decomposition:
 
 - Wait for user approval before proceeding. Do not continue until the user explicitly approves the unit plan.
 - After approval, create the parent manifest at `.ai/tasks/<NNN>-<task-id>/task-spec.md` containing the unit table and execution order.
-- Create one child `task-spec.md` per unit under numeric-prefixed subdirectories. Each child task spec follows the standard spec format: Scope, Non-Goals, Testable Acceptance Criteria (with `### Test File Paths`), Inspectable Acceptance Criteria, Relevant Files.
+- Create one child `task-spec.md` per unit under numeric-prefixed subdirectories. Each child task spec follows the standard spec format: Scope, Execution, Non-Goals, Testable Acceptance Criteria (with `### Test File Paths`), Inspectable Acceptance Criteria, Relevant Files.
 
 ```
 .ai/tasks/<NNN>-<task-id>/

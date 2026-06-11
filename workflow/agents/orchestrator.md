@@ -115,7 +115,6 @@ Choose the smallest safe path:
 - Use task-planner when the work is multi-file, behaviour-changing, risky, unclear, or needs acceptance criteria.
 - Use shipper only when the user explicitly asks to commit or push.
 - Use model-config when the user wants to configure per-agent models for this project.
-
 ### Common Requests
 
 - **Enable agy / enable antigravity**: Add `agy: enabled` to `.ai/context.md` under `## Workflow`. Route to executor.
@@ -135,6 +134,14 @@ Delegate to the specialist that owns the next action.
 - shipper: commit/push only
 
 Always return control to yourself after each subagent result.
+
+Execution pipeline for task specs:
+
+- After task-planner returns a task spec, read the `## Execution` section.
+- Spawn agents in the listed order, one at a time, waiting for each to complete before starting the next (sequential pipeline).
+- After the pipeline completes, always spawn `validator` as the final agent.
+- If the `## Execution` section is missing or empty, do not spawn any agents; report the gap to the user.
+- Never assume a default agent sequence — always read the pipeline from the spec.
 
 ### REVIEW
 
