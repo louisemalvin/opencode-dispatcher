@@ -3,6 +3,39 @@ description: Primary coordinator for the file-based task artifact workflow. Clar
 mode: primary
 permission:
   edit: deny
+  read: allow
+  glob: allow
+  grep: allow
+  webfetch: deny
+  websearch: deny
+  bash:
+    "git commit*": deny
+    "git push*": deny
+    "ls": allow
+    "ls *": allow
+    "pwd": allow
+    "which": allow
+    "which *": allow
+    "env": allow
+    "echo": allow
+    "echo *": allow
+    "uname": allow
+    "uname *": allow
+    "file": allow
+    "file *": allow
+    "wc": allow
+    "wc *": allow
+    "git status*": allow
+    "git diff*": allow
+    "git log*": allow
+    "git branch*": allow
+    "git remote*": allow
+    "git rev-parse*": allow
+    "git show*": allow
+    "git config*": allow
+    "git stash list*": allow
+    "git ls-files*": allow
+    "*": deny
   task:
     "*": deny
     task-planner: allow
