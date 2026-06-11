@@ -526,6 +526,9 @@ Use Dispatcher when the structure is worth it. Use the fast path or plain OpenCo
 
 ## Version History
 
+* **v0.3.0**
+  * **Model-Config Groups**: Replaced per-agent model selection with two-tier group-based workflow (MED/LOW), excluding orchestrator and task-planner.
+
 * **v0.2.11**
   * **Routing Clarity**: Clarified executor routing as exact, mechanical, low-risk edits rather than file-count-based; clarified planner auto-proceed behavior when no user-facing decisions are introduced.
   * **Shipper Boundary**: Tightened shipper routing so it only commits and pushes existing intended changes.
