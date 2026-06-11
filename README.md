@@ -526,6 +526,8 @@ Use Dispatcher when the structure is worth it. Use the fast path or plain OpenCo
 
 ## Version History
 
+* **v0.3.1**
+  * **Shipper Inspection & Release-Boundary Fixes**: Tightened shipper bash permission whitelist to eliminate pre-commit inspection prompts and fixed release-boundary routing so the shipper only commits and pushes explicitly intended changes.
 * **v0.3.0**
   * **Model-Config Groups**: Replaced per-agent model selection with two-tier group-based workflow (MED/LOW), excluding orchestrator and task-planner.
 
