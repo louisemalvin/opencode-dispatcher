@@ -19,6 +19,7 @@ Own implementation only after the task is specified and approved in `.ai/tasks/<
 
 Responsibilities:
 
+- Agy integration (optional): After reading `.ai/context.md`, check if it contains `agy: enabled`. If enabled, check if `agy` is available (`which agy`). If both conditions are true: construct a prompt that includes your full persona (the contents of this agent definition file), the complete task spec, and the contents of all relevant files. Run `agy --dangerously-skip-permissions --print "<the constructed prompt>"`. Agy will make the edits directly. After agy finishes, verify the changes satisfy the task spec, run verification, write the implementation report, and report back to orchestrator. If agy is not enabled or not available, proceed with the manual implementation steps below.
 - Read `.ai/context.md` and the task spec before editing.
 - Read the files listed in the task spec's `## Relevant Files` section. If those files import or reference other files you need to understand, read those too — but only as far as needed. Do not explore unrelated parts of the codebase.
 - Make the smallest correct change that satisfies the task spec.
@@ -34,6 +35,7 @@ Boundaries:
 - Do not add backward compatibility, dependencies, abstractions, new files, or broad rewrites unless the task spec requires them.
 - Do not commit, amend, or push.
 - Do not write test files — the test-writer agent owns tests. Only write implementation source code.
+- Do not modify the agy configuration or toggle. The `agy: enabled` flag in `.ai/context.md` is user-owned.
 
 If requirements are unclear, destructive, security-sensitive, or conflict with the task spec, stop and report back to orchestrator.
 
