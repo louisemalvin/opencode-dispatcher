@@ -6,14 +6,16 @@ Dispatcher supports per-agent model assignment through a two-tier group system m
 
 ### Group System
 
-The configurable subagents are divided into two hardcoded tiers:
+The configurable subagents are divided into two recommendation tiers:
 
-| Group | Agents | Intended Model Class |
-|-------|--------|----------------------|
-| **MED** | `validator`, `test-writer`, `documentation`, `init` | DeepSeek Pro class |
-| **LOW** | `implementer`, `research`, `executor`, `shipper`, `model-config` | Flash / cheap class |
+| Group | Agents | Recommended Model Class |
+|-------|--------|------------------------|
+| **MED** | `validator`, `test-writer`, `documentation`, `init` | Medium reasoning model |
+| **LOW** | `implementer`, `research`, `executor`, `shipper`, `model-config` | Cheaper / lower reasoning model |
 
 The **orchestrator** and **task-planner** are excluded from group assignment — their models are chosen directly by the user in OpenCode itself. The task-planner is intended to use the same model as the orchestrator.
+
+These are recommendation tiers, not hardcoded assignments — you choose the actual model for each group through the model-config agent. The `opencode.jsonc` file included in this repository is the maintainer's preset: a ready-to-use starting point that you can override with your own model choices.
 
 ### Configuration Flow
 

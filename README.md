@@ -1,8 +1,13 @@
 # OpenCode Dispatcher
 
-OpenCode Dispatcher is a workflow pack for OpenCode that adds specialist development agents coordinated through file-based task artifacts. It is designed for substantial coding work where you want the agent workflow to be easier to inspect, resume, and validate.
+OpenCode Dispatcher is a workflow pack for OpenCode that adds specialist development agents coordinated through file-based task artifacts. It is designed for substantial coding work where you want the agent workflow to be easier to inspect, resume, and validate. This package is for developers using OpenCode who want structured, auditable workflows for complex coding sessions.
 
 Instead of relying on long chat history, Dispatcher keeps durable task state in your project under `.ai/tasks/` (task specs, implementation reports, validation reports, documentation reports). For tiny one-off edits or quick questions, plain OpenCode is often enough.
+
+## Prerequisites
+
+- **OpenCode** — Dispatcher is a workflow add-on for OpenCode. You must have OpenCode installed and configured before using Dispatcher.
+- **Node.js >= 18** — Required for running the installer.
 
 ## Installation
 
@@ -19,12 +24,12 @@ npm run check
 npm run install:local
 ```
 
-After installing, restart OpenCode so it reloads your global configuration.
+After installing, restart OpenCode so it reloads your global configuration. For details on what the installer copies, backup behavior, and uninstall, see [Configuration](docs/configuration.md).
 
 ## First Use
 
 1. Install Dispatcher and restart OpenCode.
-2. Open your project and let the orchestrator initialize `.ai/context.md` if it does not exist.
+2. Open your project and ask the orchestrator to initialize `.ai/context.md`. For example: *"Set up my project context."*
 3. For substantial work, ask the orchestrator to create a task spec:
 
    ```text
@@ -53,11 +58,11 @@ After installing, restart OpenCode so it reloads your global configuration.
 
 ## Further Reading
 
-- [CHANGELOG.md](CHANGELOG.md) — version history
-- [docs/workflow.md](docs/workflow.md) — orchestrator/subagent flow and task artifacts
-- [docs/agents.md](docs/agents.md) — subagent reference and permission model
-- [docs/configuration.md](docs/configuration.md) — model config, agy, opencode config, install details
-- [docs/development.md](docs/development.md) — validation, conventions, releases, publishing
+- [CHANGELOG.md](https://github.com/louisemalvin/opencode-dispatcher/blob/master/CHANGELOG.md) — version history
+- [docs/workflow.md](https://github.com/louisemalvin/opencode-dispatcher/blob/master/docs/workflow.md) — orchestrator/subagent flow and task artifacts
+- [docs/agents.md](https://github.com/louisemalvin/opencode-dispatcher/blob/master/docs/agents.md) — subagent reference and permission model
+- [docs/configuration.md](https://github.com/louisemalvin/opencode-dispatcher/blob/master/docs/configuration.md) — model config, agy, opencode config, install details
+- [docs/development.md](https://github.com/louisemalvin/opencode-dispatcher/blob/master/docs/development.md) — validation, conventions, releases, publishing
 
 ## Version History
 
@@ -65,4 +70,4 @@ After installing, restart OpenCode so it reloads your global configuration.
 
 ## License
 
-MIT. See [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](https://github.com/louisemalvin/opencode-dispatcher/blob/master/LICENSE) for details.

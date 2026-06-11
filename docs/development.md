@@ -67,27 +67,8 @@ Per the [project conventions](#conventions), version bump preparation (metadata 
 
 ## CI Auto-Publish
 
-The repository includes a GitHub Actions workflow at `.github/workflows/publish.yml` that handles automated publishing.
-
-**Trigger**: Push to the `master` branch when the head commit message contains `bump to v`.
-
-**Workflow steps**:
-
-1. `actions/checkout@v6` — Checks out the repository.
-2. `actions/setup-node@v6` — Sets up Node.js version 24 with the npm registry URL.
-3. `npm ci` — Installs dependencies from the lockfile.
-4. `npm run check` — Runs the validation gate.
-5. `npm publish` — Publishes the package to the npm registry.
-
-**Authentication**: The publish step uses the `NODE_AUTH_TOKEN` environment variable set from the repository's `NPM_TOKEN` secret.
-
-The published package name on npm is `opencode-dispatcher`.
+Publishing is automated via `.github/workflows/publish.yml`. On push to `master` with `bump to v` in the commit message, the workflow runs the validation gate and publishes to npm. See the workflow file for the exact steps and authentication details.
 
 ## Project Context
 
-The project's durable context file (`.ai/context.md`) is maintained as follows:
-
-- **Creation** — Created by the **init agent** on first use in a project. The init agent interviews the user to capture test setup, conventions, and workflow preferences, then writes `.ai/context.md`.
-- **Updates** — Updated by the **documentation agent** when delegated by the orchestrator for documentation tasks.
-- **Contents** — Contains test setup (framework, runner, glob patterns), conventions (language, style, naming, file layout), workflow flags (e.g., `agy: enabled`), and publication settings.
-- **Version control** — Git-tracked as part of the repository, making project conventions inspectable and reviewable alongside code.
+See [Workflow > Project Context](workflow.md#project-context) for details on `.ai/context.md`.

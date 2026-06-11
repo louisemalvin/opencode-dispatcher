@@ -24,6 +24,8 @@ Dispatcher installs 11 agents. The **orchestrator** is the primary, user-facing 
 | Init | subagent | Bootstraps `.ai/context.md` for new projects by interviewing the user about conventions and test setup |
 | Model Config | subagent | Assigns models to agents in the project's `opencode.jsonc` configuration |
 
+For optional agy integration (Antigravity CLI for splitting quota across models), see [Configuration > Agy Integration](configuration.md#agy-integration).
+
 ---
 
 ## Permission Philosophy

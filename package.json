@@ -1,7 +1,7 @@
 {
   "name": "opencode-dispatcher",
   "version": "0.3.3",
-  "description": "A low-context OpenCode dispatcher workflow with orchestrator agents and task artifacts.",
+  "description": "OpenCode add-on providing structured multi-agent workflows, durable task artifacts, and an orchestrator agent for complex AI coding sessions.",
   "type": "module",
   "bin": {
     "opencode-dispatcher": "bin/install.js"
@@ -13,8 +13,14 @@
   "files": [
     "bin/",
     "workflow/",
-    "README.md"
+    "README.md",
+    "docs/",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "keywords": [
     "opencode",
     "ai-agents",
