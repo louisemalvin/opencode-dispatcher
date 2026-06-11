@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.4.0]
+
+- **Stronger Handoff Contract**: Orchestrator now delegates to task-planner with a rich structured handoff (conversation context, user preferences, corrections, rejected options, rationale) instead of a lossy brief summary, preventing context loss and overconfident under-contextualized specs.
+- **Parallel Planning**: Orchestrator now owns high-level decomposition (single-unit vs multi-unit classification, unit boundaries, dependencies, parallelizability) and can spawn multiple task-planner agents in parallel with assigned output paths for faster multi-unit workflows.
+- **Docs-First Routing**: Orchestrator routes to the documentation agent before task-planner when correctness depends on cross-cutting durable context (UX, product, domain, architecture, API, security decisions), ensuring task-planner has an approved source artifact to cite.
+- **Documentation Owns Durable Artifacts**: The documentation agent now explicitly owns durable source artifact types (UX briefs, product briefs, ADRs, API contracts, domain models, etc.) and reports when user approval is needed before task-planning.
+- **Validator Cites Source Artifacts**: The validator now checks cited source artifacts alongside the task spec when the task spec references them, ensuring implementations stay faithful to approved durable context.
+- **Orchestrator Prompt Slimmed**: Orchestrator prompt cleaned up with clearer responsibility split — orchestrator owns routing and coordination while task-planner owns detailed planning mechanics, field-level handoff definitions, path algorithms, and parent/child manifest formatting.
+
 ## [v0.3.3]
 
 - **Workflow Fix**: Agents now use direct reads/directory listings for `.ai/` files instead of `glob`, preventing missed `.ai/context.md` checks.

@@ -12,13 +12,13 @@ Dispatcher installs 11 agents. The **orchestrator** is the primary, user-facing 
 
 | Agent | Mode | Role Summary |
 |---|---|---|
-| Orchestrator | primary | User-facing coordinator and state-machine router; clarifies requests, delegates to subagents, synthesizes results |
+| Orchestrator | primary | User-facing coordinator and state-machine router; clarifies requests, applies docs-first routing to documentation when durable context is needed, owns high-level task decomposition, provides a structured handoff to task-planner, delegates to subagents, and synthesizes results |
 | Executor | subagent | Performs exact, mechanical, single-file atomic edits that do not need a task spec, tests, or validation |
-| Task Planner | subagent | Creates auditable task specs under `.ai/tasks/`, decomposes multi-unit work, and writes decision notes |
+| Task Planner | subagent | Creates auditable task specs under `.ai/tasks/` from an orchestrator handoff; owns path allocation, required spec sections, parent/child manifest mechanics, and planning-blocked behavior; formalizes plans without inventing missing strategic decisions; accepts assigned output paths for unit-level planning |
 | Implementer | subagent | Edits source code according to an approved task spec and writes an implementation report |
-| Validator | subagent | Validates completed work against a task spec, runs tests from acceptance criteria, audits test quality, and writes a validation report |
+| Validator | subagent | Validates completed work against a task spec and any cited durable source artifacts, runs tests from acceptance criteria, audits test quality, and writes a validation report |
 | Test Writer | subagent | Writes tests that encode testable acceptance criteria from an approved task spec; never writes implementation code |
-| Documentation | subagent | Writes documentation, project context updates, decision notes, and task documentation reports |
+| Documentation | subagent | Creates durable source artifacts (UX briefs, ADRs, domain models, API contracts, etc.) for cross-cutting context; writes documentation, project context updates, decision notes, and task documentation reports; reports when user approval is needed before task-planning |
 | Research | subagent | Gathers external facts, official documentation, comparisons, and source-backed evidence before planning decisions |
 | Shipper | subagent | Handles git commit and push only when explicitly requested; no edits, deployment, or general development |
 | Init | subagent | Bootstraps `.ai/context.md` for new projects by interviewing the user about conventions and test setup |
@@ -50,12 +50,12 @@ Permissions start locked down. Each agent is granted only the specific capabilit
 
 Each agent owns a specific layer of the workflow. No agent is allowed to cross roles:
 
-- **Orchestrator** coordinates and routes but never implements, documents, or validates.
-- **Task Planner** plans and decomposes but never edits source code or project docs outside `.ai/`.
+- **Orchestrator** coordinates, routes (including docs-first routing), and decomposes but never implements, documents, or validates.
+- **Task Planner** plans and decomposes, owns path allocation and planning mechanics, but never edits source code or project docs outside `.ai/`.
 - **Implementer** edits source code but cannot write tests (that is the Test Writer's role) or fix validation issues (the Validator reports them; only a new task can fix them).
-- **Validator** reads and reports but never fixes issues or edits code.
+- **Validator** reads and reports (against task spec AND cited source artifacts) but never fixes issues or edits code.
 - **Test Writer** writes tests but never writes implementation code.
-- **Documentation** writes docs and context but never edits source code or configuration.
+- **Documentation** creates durable source artifacts where needed, writes docs and context, but never edits source code or configuration.
 - **Research** gathers evidence but never implements or edits.
 - **Shipper** commits and pushes but never edits files, runs tests, or deploys.
 - **Init** bootstraps context but never edits source code or task artifacts.

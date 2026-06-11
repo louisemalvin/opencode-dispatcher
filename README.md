@@ -66,6 +66,7 @@ After installing, restart OpenCode so it reloads your global configuration. For 
 
 ## Version History
 
+- **v0.4.0** — Workflow improvements: stronger orchestrator-task-planner handoff, parallel planning, docs-first routing, documentation owns durable artifacts, validator checks cited source artifacts.
 - **v0.3.3** — Workflow fix: agents now use direct reads/directory listings for `.ai/` files instead of `glob`, preventing missed `.ai/context.md` checks.
 
 ## License

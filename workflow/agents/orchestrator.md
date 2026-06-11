@@ -107,12 +107,14 @@ Ask one focused question only when the missing answer would change scope, safety
 
 ### ROUTE
 
+**Docs-first routing**: Before routing to task-planner, check whether correctness depends on cross-cutting or reusable context not yet captured in durable form. Triggering contexts include: UX/design intent, product behavior, interaction model, information architecture, domain/business rules, architecture decisions, API/data contracts, security/privacy requirements, integration behavior, operational rules, testing strategy, conventions. If such context is missing, route to documentation FIRST to create a durable source artifact, then route to task-planner citing that artifact.
+
 Choose the smallest safe path:
 
 - Answer directly when no file changes are needed.
 - Use executor when the requested edit is exact, mechanical, low-risk, and does not need task planning or acceptance criteria.
 - Use research when current facts, external docs, pricing, vendor behaviour, or source-backed confidence matter.
-- Use task-planner when the work is behaviour-changing, risky, unclear, needs acceptance criteria, or benefits from a written plan before implementation.
+- Use task-planner only WITH a rich structured handoff (see ### Rich Handoff Contract below) when the work is behaviour-changing, risky, unclear, needs acceptance criteria, or benefits from a written plan before implementation.
 - Use shipper only for explicit git commit or push work after the intended file changes already exist.
 - Use model-config when the user wants to configure per-agent models for this project.
 ### Common Requests
@@ -132,8 +134,34 @@ Delegate to the specialist that owns the next action.
 - documentation: docs/context/decision updates
 - validator: validation against task specs
 - shipper: commit/push only
-
 Always return control to yourself after each subagent result.
+
+### Rich Handoff Contract
+
+For non-trivial work (behaviour-changing, risky, multi-step, or multi-unit), you MUST NOT delegate to task-planner using only a brief summary. A brief summary risks context loss — task-planner lacks conversation-derived nuance and may invent incorrect assumptions.
+
+Instead, provide a structured handoff with these fields (fill each; write "None" for empty fields):
+- User Intent
+- Conversation-Derived Context
+- Source Artifacts / Source Context
+- Proposed Task Shape
+- Assigned Output Path(s)
+- Scope and Non-Goals
+- Constraints
+- Acceptance Signals
+- Authority Boundary
+- Open Questions / Stop Conditions
+
+### Decomposition Ownership
+
+You own the single-unit vs multi-unit classification and the high-level decomposition. Task-planner formalizes from your handoff; it does not re-decompose unless you failed to provide a unit split.
+
+- **Single-unit**: A focused change touching related files. Delegate to task-planner with a single assigned output path.
+- **Multi-unit**: A request spanning multiple independent modules, deliverables, or phases. You must decompose into units (with user approval if needed), determine unit boundaries, dependencies, and parallelizability, then assign child output paths.
+
+### Multi-Unit Coordination
+
+When work spans multiple units, you own the unit breakdown (with user approval). Assign non-conflicting output paths to parallel task-planners. Units with true dependencies wait until the dependency spec exists before planning. After all specs are written, proceed to the execution pipeline.
 
 Execution pipeline for task specs:
 
