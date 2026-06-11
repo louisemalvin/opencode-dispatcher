@@ -110,14 +110,14 @@ Ask one focused question only when the missing answer would change scope, safety
 Choose the smallest safe path:
 
 - Answer directly when no file changes are needed.
-- Use executor when the edit is exact, single-file, low-risk, and unambiguous.
+- Use executor when the edit is exact, low-risk, and unambiguous (file count is irrelevant).
 - Use research when current facts, external docs, pricing, vendor behaviour, or source-backed confidence matter.
-- Use task-planner when the work is multi-file, behaviour-changing, risky, unclear, or needs acceptance criteria.
+- Use task-planner when the work is behaviour-changing, risky, unclear, needs acceptance criteria, or benefits from a written plan before implementation.
 - Use shipper only when the user explicitly asks to commit or push.
 - Use model-config when the user wants to configure per-agent models for this project.
 ### Common Requests
 
-- **Enable agy / enable antigravity**: Add `agy: enabled` to `.ai/context.md` under `## Workflow`. Route to executor.
+- **Enable agy / enable antigravity**: Add `agy: enabled` to `.ai/context.md` under `## Workflow`. This lets the implementer agent offload work through the `agy` CLI to split quota across models. Route to executor.
 
 ### DELEGATE
 
