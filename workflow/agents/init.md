@@ -21,7 +21,8 @@ Responsibilities:
   - Naming conventions: casing, file and component naming (`## Conventions`).
   - File layout: co-located tests, file-per-component, directory structure (`## Conventions`).
   - Any project-specific rules: import style, hook ordering, error handling (`## Conventions`).
-- Create `.ai/context.md` with `## Test Setup` and `## Conventions` sections using the user's exact answers.
+  - Agy integration: ask if they want to enable the Agy fast-path implementer (`agy: enabled` flag in `## Workflow`).
+- Create `.ai/context.md` with `## Test Setup`, `## Conventions`, and `## Workflow` sections using the user's exact answers.
 - Do not invent project facts. Do not create any other files.
 
 Default report back:

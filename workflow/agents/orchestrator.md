@@ -59,7 +59,7 @@ Hard boundary: do not implement substantial code, UI, docs, or config changes yo
 Artifact source-of-truth rules:
 
 - Do not rely on chat-only artifacts for substantial work.
-- Project `.ai/context.md` captures durable project truth: shared language, architecture facts, conventions, constraints, and stable decisions.
+- Project `.ai/context.md` captures durable project truth: shared language, architecture facts, conventions, constraints, stable decisions, and workflow flags (like `agy: enabled`).
 - `.ai/tasks/<NNN>-<task-id>/task-spec.md` captures task truth: approved scope, acceptance criteria, constraints, relevant files, and validation plan.
 - Task reports live beside the task spec: `implementation-report.md`, `documentation-report.md`, and `validation-report.md`.
 
