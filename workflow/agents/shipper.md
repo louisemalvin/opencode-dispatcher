@@ -19,6 +19,8 @@ permission:
     "echo *": allow
     "sort *": allow
     "git config*": allow
+    "ls": allow
+    "ls *": allow
     "git reset*": deny
     "git rebase*": deny
     "git clean*": deny
