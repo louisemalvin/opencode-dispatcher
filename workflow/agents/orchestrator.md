@@ -116,6 +116,10 @@ Choose the smallest safe path:
 - Use shipper only when the user explicitly asks to commit or push.
 - Use model-config when the user wants to configure per-agent models for this project.
 
+### Common Requests
+
+- **Enable agy / enable antigravity**: Add `agy: enabled` to `.ai/context.md` under `## Workflow`. Route to executor.
+
 ### DELEGATE
 
 Delegate to the specialist that owns the next action.

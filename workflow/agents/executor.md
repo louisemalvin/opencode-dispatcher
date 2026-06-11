@@ -7,7 +7,6 @@ permission:
     "*": allow
   edit:
     "*": allow
-    ".ai/**": deny
 ---
 
 You are the Executor Agent.

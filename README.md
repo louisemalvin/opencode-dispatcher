@@ -184,14 +184,17 @@ The documentation agent is used when the task needs README updates, project cont
 
 The research agent is used when a decision depends on external facts such as official documentation, vendor behaviour, pricing, APIs, or current best practices.
 
-### Bootstrap and Shipping
+### Bootstrap, Configuration, and Shipping
 
-| Agent   | Role                             | Used When                 |
-| ------- | -------------------------------- | ------------------------- |
-| Init    | Bootstraps `.ai/context.md`      | First use in a project    |
-| Shipper | Handles git commit and push only | When explicitly requested |
+| Agent        | Role                                                | Used When                                      |
+| ------------ | --------------------------------------------------- | ---------------------------------------------- |
+| Init         | Bootstraps `.ai/context.md`                         | First use in a project                         |
+| Model Config | Assigns models to specific agents in project config | When per-agent model overrides are needed      |
+| Shipper      | Handles git commit and push only                    | When explicitly requested                      |
 
 The init agent is used when a project does not yet have `.ai/context.md`.
+
+The model config agent configures per-agent models in `opencode.jsonc`.
 
 The shipper is never used automatically. It only commits or pushes when you explicitly ask for git shipping work.
 
@@ -314,7 +317,7 @@ Stores the approved task scope, including:
 
 * scope
 * non-goals
-* testable acceptance criteria
+* testable acceptance criteria (includes test file path hints)
 * inspectable acceptance criteria
 * relevant files
 * validation plan
@@ -497,6 +500,7 @@ Dispatcher enforces strict boundaries through OpenCode's permission model:
 
 * The orchestrator cannot run arbitrary shell commands, scripts, or write to files. It uses a strict bash whitelist limited to read-only informational tools (`ls`, `git status`, `which`, etc.).
 * Subagents only get the permissions they need (e.g. shipper is strictly gated around specific git operations).
+* To reduce excessive permission prompts during standard development cycles, the `implementer` and `validator` agents are granted broad `bash` execution allowances so they can seamlessly run test, build, and dev commands.
 * The `edit: deny` constraint is properly enforced because the shell escape hatch is sealed by the `bash` permission whitelist.
 
 ## Limitations
@@ -519,3 +523,20 @@ Dispatcher is probably unnecessary when you only need:
 * work where formal task artifacts would slow you down
 
 Use Dispatcher when the structure is worth it. Use the fast path or plain OpenCode when it is not.
+
+## Version History
+
+* **v0.2.5**
+  * **Model Configuration**: Added the `model-config` agent to seamlessly assign specific models to different agents in the project's `opencode.jsonc`.
+  * **Workflow Standardization**: Enforced sequential, zero-padded numeric prefixes for all task directories (e.g., `001-feature-name`) across all agents to ensure proper sorting and tracking.
+  * **Usability Fixes**: Granted `bash` execution allowances to `implementer` and `validator` agents to reduce excessive permission prompts during test and build cycles.
+  * **Artifact Improvements**: Split the task spec template into *Testable Acceptance Criteria* (with explicit test file path hints) and *Inspectable Acceptance Criteria* to better guide the `test-writer` and `validator`.
+* **v0.2.4**
+  * Hardened security boundaries by applying explicit read-only bash whitelists to the `orchestrator` and sealing `edit: deny` escape hatches.
+* **v0.2.1**
+  * Minor permission fixes to allow the orchestrator to cleanly delegate to the `executor` fast-path agent.
+* **v0.2.0**
+  * **Major Overhaul**: Replaced the general conversational agents with a durable, stateful task workflow.
+  * Introduced the central `orchestrator` as a user-facing router.
+  * Shifted to explicit `.ai/tasks/` artifacts (task specs, implementation reports, validation reports) to make agent work inspectable, resumable, and git-trackable.
+  * Consolidated legacy roles into specialized agents (`task-planner`, `implementer`, `validator`, `test-writer`).
