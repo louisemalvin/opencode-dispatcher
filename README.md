@@ -526,6 +526,8 @@ Use Dispatcher when the structure is worth it. Use the fast path or plain OpenCo
 
 ## Version History
 
+* **v0.2.8**
+  * **Agent Clarity**: Updated `init` and `orchestrator` agents to accurately describe `agy` as an Antigravity CLI integration for splitting quota across models. Removed "file count" from the orchestrator's executor and task-planner routing rules — routing decisions now key on risk, complexity, and clarity instead.
 * **v0.2.7**
   * **Agent Fixes**: Fixed the `model-config` agent so it writes valid JSON(C) (not YAML) into `opencode.jsonc`, added `find`/`echo`/`sort`/`git config`/`ls` bash permissions to the `shipper` agent to eliminate pre-commit inspection permission prompts, and updated `model-config` to skip the orchestrator when presenting agents for model selection (the orchestrator's model is chosen directly by the user).
 * **v0.2.6**
