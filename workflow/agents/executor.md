@@ -3,11 +3,11 @@ description: Executes simple single-file atomic edits that do not need a task sp
 mode: subagent
 hidden: true
 permission:
+  bash:
+    "*": allow
   edit:
     "*": allow
     ".ai/**": deny
-  bash: "*": allow
-  task: "*": deny
 ---
 
 You are the Executor Agent.

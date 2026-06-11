@@ -1,6 +1,6 @@
 {
   "name": "opencode-dispatcher",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A low-context OpenCode dispatcher workflow with orchestrator agents and task artifacts.",
   "type": "module",
   "bin": {
