@@ -526,6 +526,8 @@ Use Dispatcher when the structure is worth it. Use the fast path or plain OpenCo
 
 ## Version History
 
+* **v0.2.9**
+  * **Agent Context**: Shipper agent now reads `.ai/context.md` for project-specific conventions (commit format, version bump patterns, auto-publish). Added `read` permission to shipper. Updated `.ai/context.md` with publication and auto-publish conventions. Added CI workflow (`.github/workflows/publish.yml`) to auto-publish on version bump commits.
 * **v0.2.8**
   * **Agent Clarity**: Updated `init` and `orchestrator` agents to accurately describe `agy` as an Antigravity CLI integration for splitting quota across models. Removed "file count" from the orchestrator's executor and task-planner routing rules — routing decisions now key on risk, complexity, and clarity instead.
 * **v0.2.7**
