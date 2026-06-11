@@ -15,6 +15,10 @@ permission:
     "git add *": allow
     "git commit *": allow
     "git push*": allow
+    "find *": allow
+    "echo *": allow
+    "sort *": allow
+    "git config*": allow
     "git reset*": deny
     "git rebase*": deny
     "git clean*": deny
