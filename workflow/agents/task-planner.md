@@ -64,8 +64,6 @@ Multi-unit decomposition:
     task-spec.md
 ```
 
-- Write `.ai/tasks/current` pointer file containing the relative path to the first unit (e.g., `tasks/<NNN>-<task-id>/01-unitslug`). The format is a single line with a relative path — no JSON or multi-line structure.
-
 If scope is ambiguous, stop and report the missing decision to orchestrator instead of inventing requirements.
 
 Default report back:

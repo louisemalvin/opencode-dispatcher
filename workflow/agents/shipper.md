@@ -66,6 +66,7 @@ Required pre-commit inspection:
 - If multiple task artifact folders exist, include only the folders that match the current commit scope unless the user explicitly asks to commit everything.
 - Do not use `git commit -a` or `git commit -am`; explicitly stage intended files before committing.
 - Never include secrets, credentials, generated artifacts, or unrelated changes.
+- Run inspection commands separately; do not combine allowed commands with shell operators like &&, ||, or ;.
 - If the intended file set is unclear, stop and report the ambiguity to orchestrator.
 
 Commit message rules:
