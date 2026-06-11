@@ -491,6 +491,14 @@ Install it from any project with:
 npx opencode-dispatcher install
 ```
 
+## Security & Permissions
+
+Dispatcher enforces strict boundaries through OpenCode's permission model:
+
+* The orchestrator cannot run arbitrary shell commands, scripts, or write to files. It uses a strict bash whitelist limited to read-only informational tools (`ls`, `git status`, `which`, etc.).
+* Subagents only get the permissions they need (e.g. shipper is strictly gated around specific git operations).
+* The `edit: deny` constraint is properly enforced because the shell escape hatch is sealed by the `bash` permission whitelist.
+
 ## Limitations
 
 * Managed global agent paths are backed up, then overlaid with Dispatcher files.
