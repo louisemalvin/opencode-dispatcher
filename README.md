@@ -29,7 +29,7 @@ flowchart TD
     User[User] --> Orchestrator[Orchestrator]
 
     Orchestrator -->|Question or review| Direct[Direct answer]
-    Orchestrator -->|Tiny exact edit| Executor[Executor]
+    Orchestrator -->|Exact mechanical edit| Executor[Executor]
     Orchestrator -->|Substantial task| Planner[Task Planner]
     Orchestrator -->|External facts needed| Research[Research]
     Orchestrator -->|Commit or push requested| Shipper[Shipper]
@@ -113,9 +113,9 @@ The orchestrator is the main entry point. It talks with you, clarifies the reque
 
 | Agent    | Role                                   | Used When                               |
 | -------- | -------------------------------------- | --------------------------------------- |
-| Executor | Performs tiny single-file atomic edits | For exact, unambiguous one-file changes |
+| Executor | Performs exact, mechanical, low-risk edits | For edits where a task spec would not improve safety |
 
-The executor is used when a full task spec would be unnecessary.
+The executor is used when the edit is exact, mechanical, and low-risk — a task spec would not improve safety.
 
 Example:
 
@@ -216,7 +216,7 @@ flowchart LR
     User --> Orchestrator --> Executor --> Orchestrator --> Summary[Summary]
 ```
 
-Used for exact, single-file changes.
+Used for exact, mechanical, low-risk edits that do not need task planning or acceptance criteria.
 
 ### Substantial Feature or Fix
 
@@ -407,7 +407,7 @@ Current payloads include agents for:
 * validation
 * research
 * shipping
-* tiny atomic edits
+* exact mechanical edits
 
 The installer does **not** install or manage:
 
@@ -526,6 +526,10 @@ Use Dispatcher when the structure is worth it. Use the fast path or plain OpenCo
 
 ## Version History
 
+* **v0.2.11**
+  * **Routing Clarity**: Clarified executor routing as exact, mechanical, low-risk edits rather than file-count-based; clarified planner auto-proceed behavior when no user-facing decisions are introduced.
+  * **Shipper Boundary**: Tightened shipper routing so it only commits and pushes existing intended changes.
+  * **CI Update**: Updated publish workflow to Node 24-compatible GitHub Actions (`actions/checkout@v6`, `actions/setup-node@v6`, `node-version: 24`).
 * **v0.2.10**
   * **Agent Context**: Shipper agent now reads `.ai/context.md` for project-specific conventions (commit format, version bump patterns, auto-publish). Added `read` permission to shipper. Updated `.ai/context.md` with publication and auto-publish conventions. Added CI workflow (`.github/workflows/publish.yml`) to auto-publish on version bump commits.
 * **v0.2.8**

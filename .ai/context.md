@@ -22,3 +22,4 @@
 
 - **agy**: enabled
 - **Commit messages**: Conventional Commits v1.0.0 format. Version bumps use `chore(release): bump to vX.Y.Z`. The shipper agent handles commits and pushes.
+- **Version bumps**: prepare package metadata and README Version History changes before invoking shipper.

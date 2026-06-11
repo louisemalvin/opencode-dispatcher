@@ -22,6 +22,8 @@ permission:
     "git config*": allow
     "ls": allow
     "ls *": allow
+    "npm run check": allow
+    "npm run check *": allow
     "git reset*": deny
     "git rebase*": deny
     "git clean*": deny
@@ -52,6 +54,7 @@ Hard boundaries:
 - Only commit when orchestrator/user explicitly requests a commit.
 - Only push when orchestrator/user explicitly requests a push.
 - Do not amend, force-push, reset, rebase, clean, tag, or create PRs unless explicitly requested.
+- Do not prepare changes; only commit or push existing intended changes.
 - If branch/upstream ambiguity exists, report back to orchestrator instead of guessing.
 
 Required pre-commit inspection:

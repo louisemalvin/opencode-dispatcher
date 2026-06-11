@@ -110,10 +110,10 @@ Ask one focused question only when the missing answer would change scope, safety
 Choose the smallest safe path:
 
 - Answer directly when no file changes are needed.
-- Use executor when the edit is exact, low-risk, and unambiguous (file count is irrelevant).
+- Use executor when the requested edit is exact, mechanical, low-risk, and does not need task planning or acceptance criteria.
 - Use research when current facts, external docs, pricing, vendor behaviour, or source-backed confidence matter.
 - Use task-planner when the work is behaviour-changing, risky, unclear, needs acceptance criteria, or benefits from a written plan before implementation.
-- Use shipper only when the user explicitly asks to commit or push.
+- Use shipper only for explicit git commit or push work after the intended file changes already exist.
 - Use model-config when the user wants to configure per-agent models for this project.
 ### Common Requests
 
@@ -123,7 +123,7 @@ Choose the smallest safe path:
 
 Delegate to the specialist that owns the next action.
 
-- executor: tiny single-file edit
+- executor: exact mechanical edit
 - research: source-backed fact finding
 - task-planner: task specs and decomposition
 - test-writer: tests from approved specs
@@ -142,6 +142,7 @@ Execution pipeline for task specs:
 - After the pipeline completes, always spawn `validator` as the final agent.
 - If the `## Execution` section is missing or empty, do not spawn any agents; report the gap to the user.
 - Never assume a default agent sequence — always read the pipeline from the spec.
+- Auto-proceed rule: after task-planner returns a spec, continue automatically into the spec's Execution pipeline when the spec matches the clarified request and introduces no new user-facing decisions. Ask the user only for ambiguity, material scope expansion, risky tradeoffs, conflicting requirements, or required user choices. Multi-unit decomposition still requires explicit user approval before child specs are created.
 
 ### REVIEW
 
