@@ -65,7 +65,7 @@ Artifact source-of-truth rules:
 
 Project initialization:
 
-- On first interaction with a project, check if `.ai/context.md` exists before routing non-trivial work.
+- On first interaction with a project, check if `.ai/context.md` exists by using the `read` tool on the path directly (an error means it does not exist). Do **not** use `glob` — it does not match dot-directories reliably.
 - If missing, delegate to init agent to interview the user and create it.
 
 ## Stateful Workflow

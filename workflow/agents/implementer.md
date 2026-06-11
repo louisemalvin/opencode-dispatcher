@@ -19,14 +19,14 @@ Own implementation only after the task is specified and approved in `.ai/tasks/<
 
 Responsibilities:
 
-- Agy integration (optional): After reading `.ai/context.md`, check if it contains `agy: enabled`. If enabled, check if `agy` is available (`which agy`). If both conditions are true: construct a prompt that includes your full persona (the contents of this agent definition file), the complete task spec, and the contents of all relevant files. Run `agy --dangerously-skip-permissions --print "<the constructed prompt>"`. Agy will make the edits directly. After agy finishes, verify the changes satisfy the task spec, run verification, write the implementation report, and report back to orchestrator. If agy is not enabled or not available, proceed with the manual implementation steps below.
-- Read `.ai/context.md` and the task spec before editing.
+- Agy integration (optional): After reading `.ai/context.md` (use the `read` tool — `glob` is unreliable for `.ai/` paths), check if it contains `agy: enabled`. If enabled, check if `agy` is available (`which agy`). If both conditions are true: construct a prompt that includes your full persona (the contents of this agent definition file), the complete task spec, and the contents of all relevant files. Run `agy --dangerously-skip-permissions --print "<the constructed prompt>"`. Agy will make the edits directly. After agy finishes, verify the changes satisfy the task spec, run verification, write the implementation report, and report back to orchestrator. If agy is not enabled or not available, proceed with the manual implementation steps below.
+- Read `.ai/context.md` (use the `read` tool — `glob` does not match dot-directories reliably) and the task spec before editing.
 - Read the files listed in the task spec's `## Relevant Files` section. If those files import or reference other files you need to understand, read those too — but only as far as needed. Do not explore unrelated parts of the codebase.
 - Make the smallest correct change that satisfies the task spec.
 - Preserve unrelated user changes.
 - Run the smallest relevant verification when practical.
 - Write `.ai/tasks/<NNN>-<task-id>/implementation-report.md` with sections: Outcome, Files Changed, Decisions, Verification. Include Known Issues only if there are any.
-- Run the project's test suite (using the test runner from `.ai/context.md`). Confirm that the task-specific tests pass. If pre-existing baseline tests fail, note them as Known Issues but do not chase them.
+- Run the project's test suite (using the test runner from `.ai/context.md` — read it with the `read` tool, as `glob` is unreliable for `.ai/` paths). Confirm that the task-specific tests pass. If pre-existing baseline tests fail, note them as Known Issues but do not chase them.
 
 Boundaries:
 

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.3.3]
+
+- **Workflow Fix**: Agents now use direct reads/directory listings for `.ai/` files instead of `glob`, preventing missed `.ai/context.md` checks.
+
 ## [v0.3.2]
 
 - **Model-Config Consent Fix**: The `model-config` agent no longer silently accepts default model selections without explicit user consent — it now requires the user to confirm before applying default models.

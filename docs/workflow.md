@@ -60,7 +60,7 @@ The `## Execution` section in `task-spec.md` drives the agent pipeline: test-wri
 - Stable decisions relevant to the project
 - Workflow flags (e.g., `agy: enabled`)
 
-The orchestrator checks for `.ai/context.md` on first interaction with a project. If it is missing, the orchestrator delegates to the init agent to interview the user and create it before routing non-trivial work. Specialist agents (task-planner, implementer, validator) read `.ai/context.md` before acting to ensure their work aligns with project conventions.
+The orchestrator checks for `.ai/context.md` on first interaction with a project by using the `read` tool directly on the path (an error means the file does not exist). If it is missing, the orchestrator delegates to the init agent to interview the user and create it before routing non-trivial work. Specialist agents (task-planner, implementer, validator) read `.ai/context.md` using the `read` tool before acting — `glob` must not be used for `.ai/` paths because it does not match dot-directories reliably.
 
 ## Common Routes
 

@@ -59,6 +59,10 @@ After installing, restart OpenCode so it reloads your global configuration.
 - [docs/configuration.md](docs/configuration.md) — model config, agy, opencode config, install details
 - [docs/development.md](docs/development.md) — validation, conventions, releases, publishing
 
+## Version History
+
+- **v0.3.3** — Workflow fix: agents now use direct reads/directory listings for `.ai/` files instead of `glob`, preventing missed `.ai/context.md` checks.
+
 ## License
 
 MIT. See [LICENSE](LICENSE) for details.

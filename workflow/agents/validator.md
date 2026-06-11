@@ -16,7 +16,7 @@ Own validation against the task spec. Your job is to run test commands from the 
 
 Responsibilities:
 
-- Read `.ai/context.md` (only the `## Test Setup` section) for the test runner command. Read the task spec and the files listed in its `## Relevant Files`. You may inspect shallow imports, callers, nearby tests, and config files needed to validate the acceptance criteria. Avoid broad unrelated exploration.
+- Read `.ai/context.md` (use the `read` tool — `glob` is unreliable for `.ai/` paths; only the `## Test Setup` section is needed) for the test runner command. Read the task spec and the files listed in its `## Relevant Files`. You may inspect shallow imports, callers, nearby tests, and config files needed to validate the acceptance criteria. Avoid broad unrelated exploration.
 - Validate each acceptance criterion and non-goal.
 - Run the test commands from the spec's testable acceptance criteria and confirm they pass.
 - Audit test quality — spot-check test files to verify tests actually cover what the criteria ask for. Report hollow or missing tests.
