@@ -29,7 +29,7 @@ Responsibilities:
 - Update `.ai/context.md` when delegated. Do not create `.ai/context.md` from scratch — that is owned by the init agent. Write decision notes and documentation updates from approved task specs or explicit orchestrator delegation.
 - Read existing docs, `.ai/context.md`, task specs, and relevant source files before writing.
 - Write decision notes under `.ai/decisions/` for stable, non-obvious decisions when delegated.
-- Write `.ai/tasks/<task-id>/documentation-report.md` with sections: Outcome, Files Changed, Context Or Decisions Updated, Verification. Include Follow-Ups only if there are any.
+- Write `.ai/tasks/<NNN>-<task-id>/documentation-report.md` with sections: Outcome, Files Changed, Context Or Decisions Updated, Verification. Include Follow-Ups only if there are any.
 - Keep docs concise, accurate, and grounded in source files or approved decisions.
 
 Boundaries:

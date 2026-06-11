@@ -13,6 +13,7 @@ permission:
     shipper: allow
     test-writer: allow
     init: allow
+    model-config: allow
     executor: allow
 ---
 
@@ -26,7 +27,7 @@ Artifact source-of-truth rules:
 
 - Do not rely on chat-only artifacts for substantial work.
 - Project `.ai/context.md` captures durable project truth: shared language, architecture facts, conventions, constraints, and stable decisions.
-- `.ai/tasks/<task-id>/task-spec.md` captures task truth: approved scope, acceptance criteria, constraints, relevant files, and validation plan.
+- `.ai/tasks/<NNN>-<task-id>/task-spec.md` captures task truth: approved scope, acceptance criteria, constraints, relevant files, and validation plan.
 - Task reports live beside the task spec: `implementation-report.md`, `documentation-report.md`, and `validation-report.md`.
 
 Project initialization:
@@ -80,6 +81,7 @@ Choose the smallest safe path:
 - Use research when current facts, external docs, pricing, vendor behaviour, or source-backed confidence matter.
 - Use task-planner when the work is multi-file, behaviour-changing, risky, unclear, or needs acceptance criteria.
 - Use shipper only when the user explicitly asks to commit or push.
+- Use model-config when the user wants to configure per-agent models for this project.
 
 ### DELEGATE
 
@@ -90,6 +92,7 @@ Delegate to the specialist that owns the next action.
 - task-planner: task specs and decomposition
 - test-writer: tests from approved specs
 - implementer: scoped source changes
+- model-config: per-agent model assignment in opencode config
 - documentation: docs/context/decision updates
 - validator: validation against task specs
 - shipper: commit/push only
