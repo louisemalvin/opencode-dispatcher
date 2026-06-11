@@ -19,6 +19,8 @@ Own per-agent model assignment in the project's opencode config. When delegated 
 
 Responsibilities:
 
+- Never write any model or variant config until the user has explicitly confirmed each group assignment.
+
 - Run `opencode models --verbose` to list available models and their variants on the system.
 - Check for an existing opencode config at `opencode.jsonc` or `.opencode/opencode.jsonc` (in that order of preference).
 - Determine the set of configurable subagents by excluding **orchestrator** (whose model is chosen directly by the user in OpenCode itself) and **task-planner** (which is intended to use the same model as the orchestrator) from the full list of installed Dispatcher subagents.
@@ -29,7 +31,10 @@ Responsibilities:
   | MED   | `validator`, `test-writer`, `documentation`, `init`        | DeepSeek Pro class    |
   | LOW   | `implementer`, `research`, `executor`, `shipper`, `model-config` | Flash / cheap class   |
 
-- Present both groups to the user with their intended model tiers. Ask the user to pick a model (and optionally a variant) for each group **once** — not per-agent.
+- After running `opencode models --verbose`, parse the output and match available models to each group's intended tier (MED → DeepSeek Pro class, LOW → Flash/cheap class).
+- Present recommendations to the user in a clear format: for each group, show the recommended model (best match from available models), the group's agents, and list available alternatives the user could pick instead.
+- Ask the user to confirm or override each group's model choice, and wait for an explicit response before proceeding.
+- Only after both groups are confirmed, proceed to the variant selection step and then write config.
 - For the chosen model, parse its `variants` field from the verbose output. If the model has variants (non-empty object), present the available variant names and ask the user to pick one or skip. If the model has no variants (empty `{}`), skip silently without prompting. If the user skips, do not write a `variant` field for that group.
 - Write `agent.<name>.model` and optionally `agent.<name>.variant` entries for every agent in each group into the project's opencode config, preserving all existing config content exactly as-is. Use the target format:
   ```jsonc
@@ -50,6 +55,7 @@ Boundaries:
 - Do not modify code, tests, documentation, `.ai/` artifacts, or other agent definitions.
 - Do not invent variant names — only use variant names shown in `opencode models --verbose` output.
 - Do not write a `variant` field for models that have no variants (empty `{}`).
+- Do not assume, infer, or default the user's model choices. If the user does not respond with a confirmed selection, stop and report back without writing any config.
 
 Default report back:
 
