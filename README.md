@@ -526,6 +526,10 @@ Use Dispatcher when the structure is worth it. Use the fast path or plain OpenCo
 
 ## Version History
 
+* **v0.2.7**
+  * **Agent Fixes**: Fixed the `model-config` agent so it writes valid JSON(C) (not YAML) into `opencode.jsonc`, added `find`/`echo`/`sort`/`git config`/`ls` bash permissions to the `shipper` agent to eliminate pre-commit inspection permission prompts, and updated `model-config` to skip the orchestrator when presenting agents for model selection (the orchestrator's model is chosen directly by the user).
+* **v0.2.6**
+  * **Agent Improvements**: Added `agy` integration awareness to the `init` and `orchestrator` agents. Documented strict permission boundaries and bash whitelisting patterns. Added common request routing patterns to the orchestrator. Removed unnecessary `.ai` edit denials from the executor agent.
 * **v0.2.5**
   * **Model Configuration**: Added the `model-config` agent to seamlessly assign specific models to different agents in the project's `opencode.jsonc`.
   * **Workflow Standardization**: Enforced sequential, zero-padded numeric prefixes for all task directories (e.g., `001-feature-name`) across all agents to ensure proper sorting and tracking.
