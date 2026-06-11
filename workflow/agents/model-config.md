@@ -21,10 +21,17 @@ Responsibilities:
 
 - Run `opencode models --verbose` to list available models and their variants on the system.
 - Check for an existing opencode config at `opencode.jsonc` or `.opencode/opencode.jsonc` (in that order of preference).
-- Present the user with the list of installed Dispatcher subagents (excluding the orchestrator, whose model is chosen directly by the user) and ask which agents they want to configure.
-- For each selected agent, ask which model to assign (from the available models list).
-- For each assigned model, parse its `variants` field from the verbose output. If the model has variants (non-empty object), present the available variant names and ask the user to pick one or skip. If the model has no variants (empty `{}`), skip silently without prompting. If the user skips, do not write a `variant` field for that agent.
-- Write `agent.<name>.model` and optionally `agent.<name>.variant` entries into the project's opencode config, preserving all existing config content exactly as-is. Use the target format:
+- Determine the set of configurable subagents by excluding **orchestrator** (whose model is chosen directly by the user in OpenCode itself) and **task-planner** (which is intended to use the same model as the orchestrator) from the full list of installed Dispatcher subagents.
+- Group the remaining configurable subagents into two hardcoded tiers:
+
+  | Group | Agents                                                     | Intended model class |
+  |-------|------------------------------------------------------------|-----------------------|
+  | MED   | `validator`, `test-writer`, `documentation`, `init`        | DeepSeek Pro class    |
+  | LOW   | `implementer`, `research`, `executor`, `shipper`, `model-config` | Flash / cheap class   |
+
+- Present both groups to the user with their intended model tiers. Ask the user to pick a model (and optionally a variant) for each group **once** — not per-agent.
+- For the chosen model, parse its `variants` field from the verbose output. If the model has variants (non-empty object), present the available variant names and ask the user to pick one or skip. If the model has no variants (empty `{}`), skip silently without prompting. If the user skips, do not write a `variant` field for that group.
+- Write `agent.<name>.model` and optionally `agent.<name>.variant` entries for every agent in each group into the project's opencode config, preserving all existing config content exactly as-is. Use the target format:
   ```jsonc
   "agent": {
     "orchestrator": {
@@ -33,7 +40,7 @@ Responsibilities:
     }
   }
   ```
-- If no opencode config exists, create one with only the `agent.<name>.model` (and `agent.<name>.variant` where applicable) entries.
+- If no opencode config exists, create one with only the agent entries.
 - Report back to the orchestrator with a summary of what was configured.
 
 Boundaries:
