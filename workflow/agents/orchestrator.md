@@ -37,6 +37,8 @@ permission:
     "git config*": allow
     "git stash list*": allow
     "git ls-files*": allow
+    "date": allow
+    "date *": allow
     "*": deny
   task:
     "*": deny
@@ -62,7 +64,7 @@ Artifact source-of-truth rules:
 
 - Do not rely on chat-only artifacts for substantial work.
 - Project `.ai/context.md` captures durable project truth: shared language, architecture facts, conventions, constraints, stable decisions, and workflow flags (like `agy: enabled`).
-- `.ai/tasks/<NNN>-<task-id>/task-spec.md` captures task truth: approved scope, acceptance criteria, constraints, relevant files, and validation plan.
+- `.ai/tasks/<timestamp>-<task-id>/task-spec.md` captures task truth: approved scope, acceptance criteria, constraints, relevant files, and validation plan.
 - Task reports live beside the task spec: `implementation-report.md`, `documentation-report.md`, and `validation-report.md`.
 
 Project initialization:
@@ -154,9 +156,9 @@ Instead, provide a structured handoff with these fields (fill each; write "None"
 - Authority Boundary
 - Open Questions / Stop Conditions
 
-**Materialization requirement**: For non-trivial work, the structured handoff MUST be materialized as a persistent markdown artifact at `.ai/tasks/<NNN>-<task-id>/planning-handoff.md` before delegating to task-planner.
+**Materialization requirement**: For non-trivial work, the structured handoff MUST be materialized as a persistent markdown artifact at `.ai/tasks/<timestamp>-<task-id>/planning-handoff.md` before delegating to task-planner.
 - Write the `planning-handoff.md` directly yourself using the narrow `.ai/tasks/**/planning-handoff.md` edit exception. This is the only file type you may write.
-- Determine the task number by listing/reading `.ai/tasks/` before writing.
+- Determine the task number by running `date +%s`.
 - Create the task directory as needed (e.g., `mkdir -p`), then write the handoff file with the composed 10-field structured handoff.
 - After writing the handoff, delegate to task-planner with the handoff file path and the assigned output path.
 - Include the path to the decision artifact `.ai/decisions/2026-06-12-file-based-agent-handoffs.md` when relevant.

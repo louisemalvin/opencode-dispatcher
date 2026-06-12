@@ -24,7 +24,7 @@ Chat/CLI-only prompts remain acceptable for trivial, single-step handoffs where 
 
 ## Consequences
 
-- **Handoff files become task artifacts.** They are stored under `.ai/tasks/<NNN>-<task-id>/` (or equivalent) and serve as an auditable record of what was delegated.
+- **Handoff files become task artifacts.** They are stored under `.ai/tasks/<timestamp>-<task-id>/` (or equivalent) and serve as an auditable record of what was delegated.
 - **No secrets or unrelated payloads.** Handoff files must contain only the information needed for the bounded task; they are not dumping grounds.
 - **Validated and inspectable.** Handoff files are written before the subagent is invoked, so the delegating agent and (in future) automated validation can inspect them for completeness.
 - **Subagents still verify outputs.** The handoff file does not replace output verification; the delegating agent still checks results against the spec.
