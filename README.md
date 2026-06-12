@@ -66,6 +66,7 @@ After installing, restart OpenCode so it reloads your global configuration. For 
 
 ## Version History
 
+- **v0.5.0** — File-based agent handoffs: orchestrator writes planning-handoff.md artifacts directly for task-planner, implementer writes agy-handoff.md for bounded Antigravity delegation, and docs explain the intentional agy backend permission model.
 - **v0.4.0** — Workflow improvements: stronger orchestrator-task-planner handoff, parallel planning, docs-first routing, documentation owns durable artifacts, validator checks cited source artifacts.
 - **v0.3.3** — Workflow fix: agents now use direct reads/directory listings for `.ai/` files instead of `glob`, preventing missed `.ai/context.md` checks.
 

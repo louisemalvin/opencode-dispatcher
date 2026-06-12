@@ -50,6 +50,8 @@ Dispatcher stores durable task state under `.ai/tasks/`. Each task gets a zero-p
     implementation-report.md
     validation-report.md
     documentation-report.md
+    planning-handoff.md       (optional — see below)
+    agy-handoff.md            (optional — see below)
 ```
 
 | File | Purpose | Written by |
@@ -58,6 +60,10 @@ Dispatcher stores durable task state under `.ai/tasks/`. Each task gets a zero-p
 | `implementation-report.md` | What files were changed, what approach was taken, and any open questions. | Implementer |
 | `validation-report.md` | Verification results against the task spec's acceptance criteria and cited source artifacts. | Validator |
 | `documentation-report.md` | Outcome, files changed, context or decisions updated, verification, and follow-ups. | Documentation |
+| `planning-handoff.md` | Structured handoff from orchestrator to task-planner for non-trivial work. Written directly by orchestrator using a narrow edit exception. Contains the 10 handoff fields. | Orchestrator |
+| `agy-handoff.md` | Full bounded context handoff from implementer to agy for implementation delegation. Written by implementer before agy invocation. | Implementer |
+
+`planning-handoff.md` and `agy-handoff.md` are handoff artifacts, distinct from formal reports. They may appear alongside other task artifacts but are not required for every task.
 
 The `## Execution` section in `task-spec.md` drives the agent pipeline: test-writer, implementer, and/or documentation, in that order. The orchestrator reads this section, spawns agents sequentially, and always runs the validator last.
 
@@ -73,7 +79,7 @@ These are unchanged from the current workflow: direct answer for questions, exec
 
 ### Substantial Feature or Fix
 
-The orchestrator applies docs-first routing: if durable/cross-cutting context is needed, routes to documentation first. Then routes to task-planner for a task spec. After user approval, reads the spec's `## Execution` section, spawns agents sequentially (implementer, validator), and summarises the outcome.
+The orchestrator applies docs-first routing: if durable/cross-cutting context is needed, routes to documentation first. For non-trivial work, the orchestrator then writes a `planning-handoff.md` artifact directly with the structured handoff, using its narrow `.ai/tasks/**/planning-handoff.md` edit permission. After the handoff is materialized, routes to task-planner with the handoff file path for a task spec. After user approval, reads the spec's `## Execution` section, spawns agents sequentially (implementer, validator), and summarises the outcome.
 
 ### Research-Backed Change
 
@@ -89,7 +95,11 @@ When delegating non-trivial work to the task-planner, the orchestrator provides 
 
 The handoff fields are: User Intent, Conversation-Derived Context, Source Artifacts / Source Context, Proposed Task Shape, Assigned Output Path(s), Scope and Non-Goals, Constraints, Acceptance Signals, Authority Boundary, Open Questions / Stop Conditions. Each field is filled; empty fields use "None."
 
-Detailed field definitions and mechanics live in the orchestrator and task-planner agent prompts. The orchestrator owns filling this handoff for every non-trivial planning invocation.
+**Materialization**: For non-trivial work, the structured handoff is materialized as a `planning-handoff.md` file in the task directory. The orchestrator writes the file directly using a narrow `.ai/tasks/**/planning-handoff.md` edit permission. The task-planner then reads this artifact as canonical source context.
+
+Detailed field definitions and mechanics live in the orchestrator and task-planner agent prompts. The orchestrator owns composing the handoff for every non-trivial planning invocation.
+
+For implementer-to-agy delegation, see [Configuration > Agy Integration](configuration.md#agy-integration).
 
 ## Decomposition Ownership
 

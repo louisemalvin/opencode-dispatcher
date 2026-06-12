@@ -53,12 +53,20 @@ If no opencode config exists, the model-config agent creates one with only the a
 ### How It Works
 
 - The implementer agent reads `.ai/context.md` and checks for an `agy: enabled` flag under the `## Workflow` section.
-- If `agy` is enabled and available (verified via `which agy`), the implementer constructs a prompt containing:
-  - Its full persona (the agent definition file contents)
-  - The complete task spec
-  - The contents of all relevant files listed in the task spec
-- It runs `agy --dangerously-skip-permissions --print "<prompt>"` which executes the edits directly.
-- After agy finishes, the implementer verifies the changes, runs validation, writes the implementation report, and reports back to the orchestrator.
+- If `agy` is enabled and available (verified via `which agy`), the implementer creates a task-local handoff file (`.ai/tasks/<task>/agy-handoff.md`) containing:
+  - Implementer persona and boundaries (the full agent definition file contents)
+  - The orchestrator command that spawned the work
+  - The full task spec path and contents
+  - Project context from `.ai/context.md`
+  - All relevant files with their contents (or explicit paths with read-before-edit instructions)
+  - The exact report path
+  - Verification commands
+  - Constraints, non-goals, and stop conditions
+  - Explicit instructions (preserve unrelated changes, write the implementation report, do not commit/amend/push)
+- The implementer then invokes `agy --dangerously-skip-permissions --print "Read and execute the handoff file at <path>"`.
+- The `--dangerously-skip-permissions` flag is **intentional for this bounded backend mode**: agy operates under an approved, inspected handoff file that defines the complete scope of work. Since agy is invoked as a subagent and cannot interactively approve permission prompts, skip-permissions is the correct mechanism when work is fully bounded by the handoff file.
+- This is NOT unbounded/permissionless execution — it is bounded by the handoff file which the implementer writes, inspects, and verifies against.
+- After agy returns, the implementer verifies the output against the task spec, runs validation, and writes the implementation report.
 
 ### Enabling Agy
 
@@ -74,7 +82,7 @@ The flag is **user-owned** — agents never modify it. During project initializa
 
 ### Fallback
 
-If agy is not enabled (`agy: enabled` missing or set to a falsy value) or the `agy` binary is not available, the implementer proceeds with manual implementation steps.
+If agy is not enabled (`agy: enabled` missing or set to a falsy value), or the `agy` binary is not available, or the handoff cannot be constructed with sufficient completeness, the implementer falls back to manual implementation. The handoff file approach replaces the previous CLI argument approach. Large context is no longer stuffed into shell-quoted command strings.
 
 ## OpenCode Config Locations
 

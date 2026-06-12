@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.5.0]
+
+- **File-Based Handoffs**: Orchestrator writes `planning-handoff.md` artifacts directly for task-planner, implementer writes `agy-handoff.md` for bounded Antigravity delegation.
+- **Orchestrator Narrow Permission**: Orchestrator directly writes `.ai/tasks/**/planning-handoff.md` via narrow permission instead of delegating the write.
+- **Implementer Backend Delegation**: Implementer uses `agy-handoff.md` and bounded `agy --dangerously-skip-permissions --print` backend delegation for Antigravity operations.
+- **Task-Planner Reads Handoffs**: Task-planner reads planning handoff files as canonical context for task spec creation.
+- **Docs Updated**: Workflow, configuration, and agent reference docs updated to reflect the new file-based handoff patterns and permission model.
+
 ## [v0.4.0]
 
 - **Stronger Handoff Contract**: Orchestrator now delegates to task-planner with a rich structured handoff (conversation context, user preferences, corrections, rejected options, rationale) instead of a lossy brief summary, preventing context loss and overconfident under-contextualized specs.
